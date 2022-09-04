@@ -27,7 +27,7 @@ const formatSource = fs.readFileSync(path.resolve(ROOT_DIR, "build/index.js"), {
 
 //Render src/index.mustache with format js included
 const sourceTemplate = fs.readFileSync(
-	path.resolve(ROOT_DIR, "src/index.mustache"),
+	path.resolve(ROOT_DIR, "src/index.hbs"),
 	{ encoding: "utf-8" }
 );
 
