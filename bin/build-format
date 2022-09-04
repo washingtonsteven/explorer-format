@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+const fs = require("fs");
+const path = require("path");
+const Handlebars = require("handlebars");
+
+const ROOT_DIR = path.resolve(__dirname, "..");
+
+// Option: Move this to a json file and read in manually
+const storyJSON = {
+	name: "Explorer",
+	version: "1.0.0",
+	author: "Steve Washington",
+	image: "",
+	url: "",
+	license: "MIT",
+	proofing: false,
+	source: "",
+};
+
+// Step 0: Build the format js to build/index.js (i.e. run `parcel build`)
+// Option: use child_process to run `parcel build` automatically
+
+// Get the bundled format js
+const formatSource = fs.readFileSync(path.resolve(ROOT_DIR, "build/index.js"), {
+	encoding: "utf-8",
+});
+
+//Render src/index.mustache with format js included
+const sourceTemplate = fs.readFileSync(
+	path.resolve(ROOT_DIR, "src/index.mustache"),
+	{ encoding: "utf-8" }
+);
+
+storyJSON.source = Handlebars.compile(sourceTemplate)({
+	format_js: formatSource,
+});
+
+// Write storyJSON to format.js
+const formatString = `window.storyFormat(${JSON.stringify(storyJSON)})`;
+fs.writeFileSync(path.resolve(ROOT_DIR, "dist/format.js"), formatString);
+
+console.log(`Wrote format to ${path.resolve(ROOT_DIR, "dist/format.js")}`);
