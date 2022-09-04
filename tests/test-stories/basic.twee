@@ -1,0 +1,32 @@
+:: StoryData
+{
+	"ifid": "1BDC6F8E-F319-4776-AA66-1BE57A4A619C",
+	"format": "Explorer",
+	"format-version": "1.0.0"
+}
+
+:: CSS [stylesheet]
+
+.some-class { color: periwinkle }
+
+:: JS [script]
+
+(() => console.log("loaded!"))();
+
+:: StoryTitle
+
+Basic Test Story
+
+:: Start
+
+This is basically a story.
+
+<a href="http://google.com">google</a>
+
+[[Next]]
+
+:: Next
+
+This is the second part.
+
+[[Start]]

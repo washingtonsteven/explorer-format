@@ -7,7 +7,8 @@
 	"scripts": {
 		"watch": "parcel watch",
 		"build": "parcel build",
-		"build-format": "parcel build && ./bin/build-format"
+		"build-format": "parcel build && ./bin/build-format",
+		"build-basic": "yarn build-format && tweego -o test/test-stories/output/index.html -l --log-files test/test-stories/basic.twee"
 	},
 	"devDependencies": {
 		"handlebars": "^4.7.7",

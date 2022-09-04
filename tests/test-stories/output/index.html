@@ -1,4 +1,24 @@
-// Part 1, parse <tw-storydata> node
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<title>Basic Test Story</title>
+	</head>
+	<body>
+		<!-- UUID://1BDC6F8E-F319-4776-AA66-1BE57A4A619C// --><tw-storydata name="Basic Test Story" startnode="1" creator="Tweego" creator-version="2.1.1+81d1d71" ifid="1BDC6F8E-F319-4776-AA66-1BE57A4A619C" zoom="1" format="Explorer" format-version="1.0.0" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">.some-class { color: periwinkle }</style><script role="script" id="twine-user-script" type="text/twine-javascript">(() => console.log("loaded!"))();</script><tw-passagedata pid="1" name="Start" tags="" position="100,100" size="100,100">This is basically a story.
+
+&lt;a href=&quot;http://google.com&quot;&gt;google&lt;/a&gt;
+
+[[Next]]</tw-passagedata><tw-passagedata pid="2" name="Next" tags="" position="225,100" size="100,100">This is the second part.
+
+[[Start]]</tw-passagedata></tw-storydata>
+		<div id="tw-story">
+			<div id="tw-passage"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		// Part 1, parse <tw-storydata> node
 // Part 2, use that data to display stuff in the #passage node
 // Part 3, other fun stuff!
 const $882b6d93070905b3$var$buildStoryData = ()=>{
@@ -91,3 +111,6 @@ const $882b6d93070905b3$var$displayPassage = (pid, passages, node)=>{
 
 
 //# sourceMappingURL=index.js.map
+
+	</script>
+</html>
