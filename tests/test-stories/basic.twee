@@ -21,9 +21,13 @@ Basic Test Story
 
 This is basically a story.
 
+Age is {{age}}
+
 <a href="http://google.com">google</a>
 
 [[Next]]
+
+[[Next with alias|Next]]
 
 :: Next
 

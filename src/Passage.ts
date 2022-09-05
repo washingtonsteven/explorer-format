@@ -1,7 +1,10 @@
+import { marked } from "marked";
+import { parseLinks, unescape } from "./util";
+
 class Passage {
 	pid: string;
 	name: string;
-	content: string;
+	rawContent: string;
 	tags: string[];
 	position: { x: number; y: number };
 	size: { width: number; height: number };
@@ -43,6 +46,16 @@ class Passage {
 		this.tags = tags;
 		this.position = position;
 		this.size = size;
-		this.content = content;
+		this.rawContent = content;
+	}
+
+	get richContent() {
+		const linksParsed = parseLinks(this.rawContent);
+		const unescaped = unescape(linksParsed);
+		const html = marked.parse(unescaped);
+
+		return html;
 	}
 }
+
+export default Passage;

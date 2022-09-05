@@ -1,3 +1,5 @@
+import Story from "./Story";
+
 (() => {
 	const rootStoryDataNode =
 		document.querySelector<HTMLElement>("tw-storydata");

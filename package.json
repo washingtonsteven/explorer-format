@@ -9,13 +9,20 @@
 		"build-basic": "yarn build-format && tweego -o tests/test-stories/output/index.html -l --log-files tests/test-stories/basic.twee"
 	},
 	"devDependencies": {
-		"handlebars": "^4.7.7",
 		"parcel": "^2.7.0"
 	},
 	"targets": {
 		"default": {
 			"source": "src/index.ts",
-			"distDir": "build"
+			"distDir": "build",
+			"sourceMap": {
+				"inline": true,
+				"inlineSources": true
+			}
 		}
+	},
+	"dependencies": {
+		"handlebars": "^4.7.7",
+		"marked": "^4.1.0"
 	}
 }

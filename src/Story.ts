@@ -1,3 +1,6 @@
+import Passage from "./Passage";
+import Handlebars from "handlebars";
+
 class Story {
 	name: string;
 	ifid: string;
@@ -77,10 +80,22 @@ class Story {
 			passage = passageOrPid;
 		}
 
-		node.innerHTML = passage.content;
+		const passageContent = Handlebars.compile(passage.richContent)(
+			this.stateObject
+		);
+
+		node.innerHTML = passageContent;
 	}
 
 	displayCurrentPassage(node: HTMLElement) {
 		this.displayPassage(this.currentPassage, node);
 	}
+
+	get stateObject() {
+		return {
+			age: 16,
+		};
+	}
 }
+
+export default Story;
