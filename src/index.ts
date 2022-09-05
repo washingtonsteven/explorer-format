@@ -1,5 +1,13 @@
 import Story from "./Story";
 
+type ExplorerGlobal = {
+	__explorer: {
+		story: Story;
+	};
+};
+
+type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
+
 (() => {
 	// Initialize story data
 	const rootStoryDataNode =
@@ -44,6 +52,11 @@ import Story from "./Story";
 			story.displayPassage(passage, passageContainer);
 		}
 	});
+
+	// Let's make the story accessible
+	(window as WindowWithExplorerGlobal).__explorer = {
+		story,
+	};
 
 	// Let's go!
 	story.displayCurrentPassage(passageContainer);

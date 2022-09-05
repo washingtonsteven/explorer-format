@@ -19,6 +19,8 @@ Basic Test Story
 
 :: Start
 
+{{#set age="impolite to ask"}}{{/set}}
+
 This is basically a story.
 
 Age is {{age}}
@@ -32,5 +34,10 @@ Age is {{age}}
 :: Next
 
 This is the second part.
+
+<script type="text/javascript">
+window.__explorer.story.state.set("age", "i set this from the second part!");
+console.log("Script!");
+</script>
 
 [[Start]]

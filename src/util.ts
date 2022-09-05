@@ -28,3 +28,19 @@ export const unescape = (content: string) => {
 
 	return content;
 };
+
+/**
+ * Once we pass the content through marked, it will replace quotes in
+ * mustache blocks (i.e. {{#set thing="value"}}{{/set}}) with `&quot;`
+ * This will undo that.
+ */
+export const fixHandlebarsAttributeQuotes = (content: string) => {
+	const handlebarsAttributeQuoteRegex = new RegExp(
+		/\{\{.*(&quot;).*\}\}/,
+		"g"
+	);
+
+	return content.replace(handlebarsAttributeQuoteRegex, (m) => {
+		return m.replace(new RegExp("&quot;", "g"), '"');
+	});
+};

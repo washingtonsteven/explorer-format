@@ -1,6 +1,6 @@
 import Passage from "./Passage";
 import State from "./State";
-import Handlebars from "handlebars";
+import HandlebarsRenderer from "./HandlebarsRenderer";
 
 const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid;";
 
@@ -15,6 +15,7 @@ class Story {
 	creatorVersion: string | null;
 	passages: Passage[];
 	state: State;
+	renderer: HandlebarsRenderer;
 
 	constructor(storyDataNode: HTMLElement) {
 		const name = storyDataNode.getAttribute("name");
@@ -55,6 +56,8 @@ class Story {
 		this.state = new State({
 			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
 		});
+
+		this.renderer = new HandlebarsRenderer(this);
 	}
 
 	get currentPassage() {
@@ -92,9 +95,7 @@ class Story {
 			passage = passageOrPid;
 		}
 
-		const passageContent = Handlebars.compile(passage.richContent)(
-			this.state.combinedStateObject
-		);
+		const passageContent = this.renderer.render(passage.richContent);
 
 		node.innerHTML = passageContent;
 

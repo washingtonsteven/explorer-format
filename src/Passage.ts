@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { parseLinks, unescape } from "./util";
+import { fixHandlebarsAttributeQuotes, parseLinks, unescape } from "./util";
 
 class Passage {
 	pid: string;
@@ -54,7 +54,7 @@ class Passage {
 		const unescaped = unescape(linksParsed);
 		const html = marked.parse(unescaped);
 
-		return html;
+		return fixHandlebarsAttributeQuotes(html);
 	}
 }
 
