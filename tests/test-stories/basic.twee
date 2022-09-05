@@ -19,7 +19,9 @@ Basic Test Story
 
 :: Start
 
+{{^age}}
 {{#set age="impolite to ask"}}{{/set}}
+{{/age}}
 
 This is basically a story.
 
@@ -35,9 +37,10 @@ Age is {{age}}
 
 This is the second part.
 
-<script type="text/javascript">
-window.__explorer.story.state.set("age", "i set this from the second part!");
-console.log("Script!");
-</script>
+{{#script}}
+console.log(this);
+this.set("age", "set from the second passage");
+console.log(this.get("currentPassagePid"));
+{{/script}}
 
 [[Start]]

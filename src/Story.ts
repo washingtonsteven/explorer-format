@@ -2,7 +2,8 @@ import Passage from "./Passage";
 import State from "./State";
 import HandlebarsRenderer from "./HandlebarsRenderer";
 
-const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid;";
+const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid";
+const LAST_PASSAGE_PID_STATEKEY = "lastPassagePid";
 
 class Story {
 	name: string;
@@ -55,6 +56,7 @@ class Story {
 
 		this.state = new State({
 			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
+			[LAST_PASSAGE_PID_STATEKEY]: null,
 		});
 
 		this.renderer = new HandlebarsRenderer(this);
@@ -95,11 +97,15 @@ class Story {
 			passage = passageOrPid;
 		}
 
+		this.state.set(
+			LAST_PASSAGE_PID_STATEKEY,
+			this.state.get(CURRENT_PASSAGE_PID_STATEKEY)
+		);
+		this.state.set(CURRENT_PASSAGE_PID_STATEKEY, passage.pid);
+
 		const passageContent = this.renderer.render(passage.richContent);
 
 		node.innerHTML = passageContent;
-
-		this.state.set(CURRENT_PASSAGE_PID_STATEKEY, passage.pid);
 	}
 
 	displayCurrentPassage(node: HTMLElement) {
