@@ -1,5 +1,8 @@
 import Passage from "./Passage";
+import State from "./State";
 import Handlebars from "handlebars";
+
+const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid;";
 
 class Story {
 	name: string;
@@ -11,7 +14,7 @@ class Story {
 	creator: string | null;
 	creatorVersion: string | null;
 	passages: Passage[];
-	currentPassagePid: string;
+	state: State;
 
 	constructor(storyDataNode: HTMLElement) {
 		const name = storyDataNode.getAttribute("name");
@@ -48,11 +51,16 @@ class Story {
 		});
 
 		this.passages = passages;
-		this.currentPassagePid = startnode;
+
+		this.state = new State({
+			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
+		});
 	}
 
 	get currentPassage() {
-		const currentPassage = this.getPassageByPid(this.currentPassagePid);
+		const currentPassage = this.getPassageByPid(
+			this.state.get(CURRENT_PASSAGE_PID_STATEKEY)
+		);
 		if (!currentPassage) {
 			throw new Error(
 				`Tried to fetch currentPassage but it doesn't exist!`
@@ -64,6 +72,10 @@ class Story {
 
 	getPassageByPid(pid: string) {
 		return this.passages.find((passage) => passage.pid === pid) || null;
+	}
+
+	getPassageByName(name: string) {
+		return this.passages.find((passage) => passage.name === name) || null;
 	}
 
 	displayPassage(passageOrPid: string | Passage, node: HTMLElement) {
@@ -81,20 +93,16 @@ class Story {
 		}
 
 		const passageContent = Handlebars.compile(passage.richContent)(
-			this.stateObject
+			this.state.combinedStateObject
 		);
 
 		node.innerHTML = passageContent;
+
+		this.state.set(CURRENT_PASSAGE_PID_STATEKEY, passage.pid);
 	}
 
 	displayCurrentPassage(node: HTMLElement) {
 		this.displayPassage(this.currentPassage, node);
-	}
-
-	get stateObject() {
-		return {
-			age: 16,
-		};
 	}
 }
 
