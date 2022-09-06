@@ -32,7 +32,11 @@ const NODE_BORDER_TABLE = [
 
 class CanvasMap {
 	canvasElem: HTMLCanvasElement;
-	canvas: fabric.StaticCanvas;
+	canvas: fabric.Canvas;
+	isDragging: boolean;
+	lastPosX: number;
+	lastPosY: number;
+	initialVPT?: number[];
 
 	constructor() {
 		const canvasElem =
@@ -41,15 +45,17 @@ class CanvasMap {
 			throw new Error(`No canvas found!`);
 		}
 
-		console.log("MAP INITIALIZED");
-
 		this.canvasElem = canvasElem;
 
 		// init
-		this.canvas = new fabric.StaticCanvas(this.canvasElem);
+		this.canvas = new fabric.Canvas(this.canvasElem, {
+			selection: false,
+		});
+		this.initialVPT = this.canvas.viewportTransform;
+
 		const mapData = {
-			nodeWidth: 20, // width/height of head box, in pixels
-			nodeHeight: 20,
+			nodeWidth: 25, // width/height of head box, in pixels
+			nodeHeight: 25,
 			gridWidth: 20, // how many grid spaces there are (i.e. map width in pixels is gridWidth * nodeWidth)
 			gridHeight: 20,
 			fillColor: "#ffd700",
@@ -65,6 +71,50 @@ class CanvasMap {
 				y: 1,
 			},
 		};
+
+		this.canvas.on("mouse:wheel", (opt) => {
+			const delta = opt.e.deltaY;
+			let zoom = this.canvas.getZoom();
+			zoom *= 0.999 ** delta;
+			if (zoom > 20) zoom = 20;
+			if (zoom < 0.2) zoom = 0.2;
+			this.canvas.zoomToPoint(
+				{ x: opt.e.offsetX, y: opt.e.offsetY },
+				zoom
+			);
+			opt.e.preventDefault();
+			opt.e.stopPropagation();
+		});
+
+		this.canvas.on("mouse:down", (opt) => {
+			const e = opt.e;
+			if (e.altKey === true) {
+				this.isDragging = true;
+				this.lastPosX = e.clientX;
+				this.lastPosY = e.clientY;
+			}
+		});
+
+		this.canvas.on("mouse:move", (opt) => {
+			if (this.isDragging) {
+				const e = opt.e;
+				const vpt = this.canvas.viewportTransform;
+				if (vpt) {
+					vpt[4] += e.clientX - this.lastPosX;
+					vpt[5] += e.clientY - this.lastPosY;
+					this.canvas.requestRenderAll();
+					this.lastPosX = e.clientX;
+					this.lastPosY = e.clientY;
+				}
+			}
+		});
+
+		this.canvas.on("mouse:up", (opt) => {
+			if (this.canvas.viewportTransform) {
+				this.canvas.setViewportTransform(this.canvas.viewportTransform);
+			}
+			this.isDragging = false;
+		});
 
 		mapData.nodes
 			.trim()
@@ -85,6 +135,7 @@ class CanvasMap {
 							fill: mapData.fillColor,
 							width: mapData.nodeWidth,
 							height: mapData.nodeHeight,
+							selectable: false,
 						});
 
 						this.canvas.add(r);
@@ -101,6 +152,7 @@ class CanvasMap {
 								width: mapData.nodeWidth,
 								height: mapData.nodeHeight,
 								opacity: 0,
+								selectable: false,
 							});
 							this.canvas.add(h);
 
@@ -158,6 +210,7 @@ class CanvasMap {
 										stroke: mapData.borderColor,
 										strokeWidth: 2,
 										strokeLineJoin: "round",
+										selectable: false,
 									}
 								);
 
@@ -168,29 +221,33 @@ class CanvasMap {
 			});
 
 		// grid lines
+		//vert
 		let c = 0;
-		for (c = 0; c < mapData.gridWidth; c++) {
+		for (c = 0; c <= mapData.gridWidth; c++) {
 			const startX = c * mapData.nodeWidth;
 			const startY = 0;
 			const endX = startX;
-			const endY = 300; // TODO: infer this?
+			const endY = mapData.gridHeight * mapData.nodeHeight; // TODO: infer this?
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
 				stroke: mapData.borderColor,
 				strokeWidth: 1,
+				selectable: false,
 			});
 
 			this.canvas.add(l);
 		}
-		for (c = 0; c < mapData.gridHeight; c++) {
+		//hori
+		for (c = 0; c <= mapData.gridHeight; c++) {
 			const startX = 0;
 			const startY = c * mapData.nodeHeight;
-			const endX = 300;
+			const endX = mapData.gridWidth * mapData.nodeWidth;
 			const endY = startY;
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
 				stroke: mapData.borderColor,
 				strokeWidth: 1,
+				selectable: false,
 			});
 
 			this.canvas.add(l);
