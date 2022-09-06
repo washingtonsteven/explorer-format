@@ -32,7 +32,7 @@ const NODE_BORDER_TABLE = [
 
 class CanvasMap {
 	canvasElem: HTMLCanvasElement;
-	canvas: fabric.Canvas;
+	canvas: fabric.StaticCanvas;
 
 	constructor() {
 		const canvasElem =
@@ -46,14 +46,14 @@ class CanvasMap {
 		this.canvasElem = canvasElem;
 
 		// init
-		this.canvas = new fabric.Canvas(this.canvasElem);
+		this.canvas = new fabric.StaticCanvas(this.canvasElem);
 		const mapData = {
-			nodeWidth: 15,
-			nodeHeight: 15,
-			gridWidth: 20,
+			nodeWidth: 20, // width/height of head box, in pixels
+			nodeHeight: 20,
+			gridWidth: 20, // how many grid spaces there are (i.e. map width in pixels is gridWidth * nodeWidth)
 			gridHeight: 20,
 			fillColor: "#ffd700",
-			borderColor: "#ccc",
+			borderColor: "#333",
 			nodes: `
 				8111115xxx
 				400003015x
@@ -83,7 +83,6 @@ class CanvasMap {
 							left: xCoord,
 							top: yCoord,
 							fill: mapData.fillColor,
-							hasControls: false,
 							width: mapData.nodeWidth,
 							height: mapData.nodeHeight,
 						});
@@ -101,7 +100,6 @@ class CanvasMap {
 								fill: "#fff",
 								width: mapData.nodeWidth,
 								height: mapData.nodeHeight,
-								hasControls: false,
 								opacity: 0,
 							});
 							this.canvas.add(h);
@@ -157,9 +155,8 @@ class CanvasMap {
 								const l = new fabric.Line(
 									[startX, startY, endX, endY],
 									{
-										stroke: "#333",
+										stroke: mapData.borderColor,
 										strokeWidth: 2,
-										hasControls: false,
 										strokeLineJoin: "round",
 									}
 								);
@@ -179,9 +176,8 @@ class CanvasMap {
 			const endY = 300; // TODO: infer this?
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
-				stroke: "#333",
+				stroke: mapData.borderColor,
 				strokeWidth: 1,
-				hasControls: false,
 			});
 
 			this.canvas.add(l);
@@ -193,9 +189,8 @@ class CanvasMap {
 			const endY = startY;
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
-				stroke: "#333",
+				stroke: mapData.borderColor,
 				strokeWidth: 1,
-				hasControls: false,
 			});
 
 			this.canvas.add(l);
