@@ -4,6 +4,13 @@ import nodeTest from "node:test";
 // TODO: maps that are larger than the canvas, allow for zoom, pan, etc.
 // See: http://fabricjs.com/fabric-intro-part-5#pan_zoom
 
+// Use the symbol in the comment to specify border on the particular node
+// It's just hex
+// i.e. node "8" has a left and top border, "7" is left and bottom, etc.
+// 73333336 represents a "floor" i.e. |_ _ _ _ _ _ _ _|
+// b through e are "end caps"
+// f is just a box
+// Any other symbol renders nothing. "x" is a good placeholder. You could use space i guess.
 const NODE_BORDER_TABLE = [
 	"", // 0
 	"t", // 1
@@ -16,7 +23,7 @@ const NODE_BORDER_TABLE = [
 	"lt", // 8
 	"tb", // 9
 	"lr", // a
-	"rtb", // b
+	"rtl", // b
 	"trb", // c
 	"rbl", // d
 	"blt", // e
@@ -66,7 +73,7 @@ class CanvasMap {
 				line.trim()
 					.split("")
 					.forEach((node, col) => {
-						if (node === "x") {
+						if (isNaN(parseInt(node, 16))) {
 							return;
 						}
 
