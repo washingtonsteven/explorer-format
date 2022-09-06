@@ -1,5 +1,8 @@
 import { fabric } from "fabric";
 
+// TODO: maps that are larger than the canvas, allow for zoom, pan, etc.
+// See: http://fabricjs.com/fabric-intro-part-5#pan_zoom
+
 class CanvasMap {
 	canvasElem: HTMLCanvasElement;
 	canvas: fabric.Canvas;
