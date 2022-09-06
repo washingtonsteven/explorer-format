@@ -9,6 +9,7 @@
 		"build-basic": "yarn build-format && tweego -o tests/test-stories/output/index.html -l --log-files tests/test-stories/basic.twee"
 	},
 	"devDependencies": {
+		"@types/fabric": "^4.5.12",
 		"parcel": "^2.7.0"
 	},
 	"targets": {
@@ -22,7 +23,11 @@
 		}
 	},
 	"dependencies": {
+		"fabric": "^5.2.4",
 		"handlebars": "^4.7.7",
 		"marked": "^4.1.0"
+	},
+	"alias": {
+		"buffer": false
 	}
 }
