@@ -76,4 +76,31 @@ this.set("age", "set from the second passage");
 console.log(this.get("currentPassagePid"));
 {{/script}}
 
+[[Start]]  
+[[Explore]]
+
+:: Explore
+
+Now we are in it!
+
+[[Go East]]
+
+{{#display_map name="Map1" highlight="9,10"}}{{/display_map}}
+
+:: Go East
+
+Slide to the right
+
+[[Go West|Explore]]
+[[Go Nowhere]] 
 [[Start]]
+
+{{#display_map name="Map1" highlight="6,6"}}{{/display_map}}
+
+:: Go Nowhere
+
+Gone.
+
+[[Start]]
+
+{{#display_map name="Map1"}}{{/display_map}}

@@ -61,10 +61,6 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 
 	// Let's go!
 	story.displayCurrentPassage(passageContainer);
-	story.canvasMap.displayMap("Map1", { x: 7, y: 6 });
-	setTimeout(() => {
-		story.canvasMap.clear();
-	}, 2500);
 
 	new CanvasMap();
 })();

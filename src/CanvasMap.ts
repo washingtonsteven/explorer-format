@@ -21,6 +21,16 @@ export interface CanvasMapDefaultData {
 	borderColor: string;
 }
 
+export type HighlightPoint = {
+	x: number;
+	y: number;
+} | null;
+
+export type ViewportSize = {
+	width: number;
+	height: number;
+};
+
 interface PassageMap {
 	map: string;
 	name: string;
@@ -28,10 +38,7 @@ interface PassageMap {
 
 type CanvasMapData = CanvasMapDefaultData & {
 	map: string;
-	highlight?: {
-		x: number;
-		y: number;
-	};
+	highlight?: HighlightPoint;
 };
 
 class CanvasMap {
@@ -44,6 +51,7 @@ class CanvasMap {
 	defaultMapData: CanvasMapDefaultData;
 	maps: PassageMap[];
 	currentMap: PassageMap | null;
+	viewportSize: ViewportSize;
 
 	constructor() {
 		const canvasElem =
@@ -53,6 +61,17 @@ class CanvasMap {
 		}
 
 		this.canvasElem = canvasElem;
+
+		const viewWidth = parseInt(
+			this.canvasElem.getAttribute("width") || "300"
+		);
+		const viewHeight = parseInt(
+			this.canvasElem.getAttribute("height") || "300"
+		);
+		this.viewportSize = {
+			width: isNaN(viewWidth) ? 300 : viewWidth,
+			height: isNaN(viewHeight) ? 300 : viewHeight,
+		};
 
 		this.canvas = new fabric.Canvas(this.canvasElem, {
 			selection: false,
@@ -129,7 +148,7 @@ class CanvasMap {
 		this.maps.push(map);
 	}
 
-	displayMap(mapName: string, highlight: { x: number; y: number }) {
+	displayMap(mapName: string, highlight?: HighlightPoint) {
 		const passageMap = this.maps.find((m) => m.name === mapName);
 		if (!passageMap) {
 			throw new Error(`Unable to find map named ${mapName}!`);
@@ -143,8 +162,30 @@ class CanvasMap {
 
 		this.currentMap = passageMap;
 
+		this.clear();
 		this.drawMapNodes(mapData);
 		this.drawGridLines(mapData);
+
+		const vpt = this.canvas.viewportTransform;
+		const halfMapWidth = (mapData.blockWidth * mapData.gridCols) / 2;
+		const halfMapHeight = (mapData.blockHeight * mapData.gridRows) / 2;
+		if (vpt) {
+			vpt[4] = -halfMapWidth + this.viewportSize.width / 2;
+			vpt[5] = -halfMapHeight + this.viewportSize.height / 2;
+		}
+
+		if (highlight) {
+			const focusX =
+				highlight.x * mapData.blockWidth + mapData.blockWidth / 2;
+			const focusY =
+				highlight.y * mapData.blockHeight + mapData.blockHeight / 2;
+
+			const vpt = this.canvas.viewportTransform;
+			if (vpt) {
+				vpt[4] = -focusX + this.viewportSize.width / 2;
+				vpt[5] = -focusY + this.viewportSize.height / 2;
+			}
+		}
 	}
 
 	clear() {
