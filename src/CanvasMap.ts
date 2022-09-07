@@ -173,7 +173,10 @@ class CanvasMap {
 
 						if (borders) {
 							borders.forEach((borderDir) => {
-								let startX, startY, endX, endY;
+								let startX: number,
+									startY: number,
+									endX: number,
+									endY: number;
 
 								if (borderDir === BORDER_TOP) {
 									startX = xCoord;
