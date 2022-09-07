@@ -13,6 +13,39 @@
 
 (() => console.log("loaded!"))();
 
+:: MapDefaults
+{
+	"gridCols": 20,
+	"gridRows": 20,
+	"blockWidth": 25,
+	"blockHeight": 25,
+	"color": "#197ce3",
+	"highlightColor": "#e38019",
+	"borderColor": "#333"
+}
+
+:: Map1 [map]
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx00xxxxxxx
+xxxxxxx000000xxxxxxx
+xxxxxxx00xxxxxxxxxxx
+xxxxx0000000000xxxxx
+xxxxx0000000000xxxxx
+xxxxx0000000000xxxxx
+xxxxxxxx00xxx0000xxx
+xxxxxxxx00xxxxxxxxxx
+xxxx000000000000xxxx
+xxxx00xxxxxx0000xxxx
+xxxx00xxxxxxxxxxxxxx
+xxxx000000000000xxxx
+xxxxxxxx000000xxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+
 :: StoryTitle
 
 Basic Test Story

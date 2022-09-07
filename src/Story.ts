@@ -1,6 +1,7 @@
 import Passage from "./Passage";
 import State from "./State";
 import HandlebarsRenderer from "./HandlebarsRenderer";
+import CanvasMap, { type CanvasMapDefaultData } from "./CanvasMap";
 
 const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid";
 const LAST_PASSAGE_PID_STATEKEY = "lastPassagePid";
@@ -17,6 +18,7 @@ class Story {
 	passages: Passage[];
 	state: State;
 	renderer: HandlebarsRenderer;
+	canvasMap: CanvasMap;
 
 	constructor(storyDataNode: HTMLElement) {
 		const name = storyDataNode.getAttribute("name");
@@ -43,13 +45,33 @@ class Story {
 		this.zoom = storyDataNode.getAttribute("zoom");
 		this.creator = storyDataNode.getAttribute("creator");
 		this.creatorVersion = storyDataNode.getAttribute("creator-version");
+		this.canvasMap = new CanvasMap();
 
 		const passages: Passage[] = [];
 		const passageNodes =
 			storyDataNode.querySelectorAll<HTMLElement>("tw-passagedata");
 
 		Array.from(passageNodes).forEach((node) => {
-			passages.push(new Passage(node));
+			const passage = new Passage(node);
+
+			if (passage.name === "MapDefaults") {
+				let defaultData: CanvasMapDefaultData;
+				try {
+					defaultData = JSON.parse(passage.rawContent);
+					this.canvasMap.setDefaultMapData(defaultData);
+				} catch (e) {
+					throw new Error(`Malformed default map data!`);
+				}
+			}
+
+			if (passage.tags.includes("map")) {
+				this.canvasMap.addMap({
+					map: passage.rawContent,
+					name: passage.name,
+				});
+			}
+
+			passages.push(passage);
 		});
 
 		this.passages = passages;

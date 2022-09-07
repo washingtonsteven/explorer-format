@@ -1,8 +1,5 @@
 import { fabric } from "fabric";
 
-// TODO: maps that are larger than the canvas, allow for zoom, pan, etc.
-// See: http://fabricjs.com/fabric-intro-part-5#pan_zoom
-
 // Set map.nodes to a string containing any characters
 // If the character is valid hex (i.e. 0-9 and a-f), it will be interpreted with a border
 // bit masks go top, right, bottom, left from most significant to least.
@@ -14,6 +11,29 @@ const BORDER_RIGHT = 0x4;
 const BORDER_BOTTOM = 0x2;
 const BORDER_LEFT = 0x1;
 
+export interface CanvasMapDefaultData {
+	gridCols: number;
+	gridRows: number;
+	blockWidth: number;
+	blockHeight: number;
+	color: string;
+	highlightColor: string;
+	borderColor: string;
+}
+
+interface PassageMap {
+	map: string;
+	name: string;
+}
+
+type CanvasMapData = CanvasMapDefaultData & {
+	map: string;
+	highlight?: {
+		x: number;
+		y: number;
+	};
+};
+
 class CanvasMap {
 	canvasElem: HTMLCanvasElement;
 	canvas: fabric.Canvas;
@@ -21,6 +41,9 @@ class CanvasMap {
 	lastPosX: number;
 	lastPosY: number;
 	initialVPT?: number[];
+	defaultMapData: CanvasMapDefaultData;
+	maps: PassageMap[];
+	currentMap: PassageMap | null;
 
 	constructor() {
 		const canvasElem =
@@ -31,30 +54,10 @@ class CanvasMap {
 
 		this.canvasElem = canvasElem;
 
-		// init
 		this.canvas = new fabric.Canvas(this.canvasElem, {
 			selection: false,
 		});
 		this.initialVPT = this.canvas.viewportTransform;
-
-		const mapData = {
-			nodeWidth: 25, // width/height of head box, in pixels
-			nodeHeight: 25,
-			gridWidth: 20, // how many grid spaces there are (i.e. map width in pixels is gridWidth * nodeWidth)
-			gridHeight: 20,
-			fillColor: "#ffd700",
-			borderColor: "#333",
-			nodes: `
-				988888cxxx
-				10000208cx
-				10026x104x
-				326xxx326e
-			`,
-			highlight: {
-				x: 3,
-				y: 1,
-			},
-		};
 
 		this.canvas.on("mouse:wheel", (opt) => {
 			const delta = opt.e.deltaY;
@@ -100,132 +103,79 @@ class CanvasMap {
 			this.isDragging = false;
 		});
 
-		mapData.nodes
+		this.defaultMapData = {
+			gridCols: 20,
+			gridRows: 20,
+			blockWidth: 25,
+			blockHeight: 25,
+			color: "#ffd700",
+			highlightColor: "#fff",
+			borderColor: "#333",
+		};
+
+		this.maps = [];
+
+		this.currentMap = null;
+	}
+
+	setDefaultMapData(data: CanvasMapDefaultData) {
+		this.defaultMapData = {
+			...this.defaultMapData,
+			...data,
+		};
+	}
+
+	addMap(map: PassageMap) {
+		this.maps.push(map);
+	}
+
+	displayMap(mapName: string, highlight: { x: number; y: number }) {
+		const passageMap = this.maps.find((m) => m.name === mapName);
+		if (!passageMap) {
+			throw new Error(`Unable to find map named ${mapName}!`);
+		}
+
+		const mapData: CanvasMapData = {
+			...this.defaultMapData,
+			map: passageMap.map,
+			highlight,
+		};
+
+		this.currentMap = passageMap;
+
+		this.drawMapNodes(mapData);
+		this.drawGridLines(mapData);
+	}
+
+	clear() {
+		this.currentMap = null;
+		this.canvas.clear();
+	}
+
+	drawMapNodes(mapData: CanvasMapData) {
+		// TODO: don't redraw map if it's already up
+		//       may have to redraw the highlight though
+		mapData.map
 			.trim()
 			.split("\n")
 			.forEach((line, row) => {
 				line.trim()
 					.split("")
 					.forEach((node, col) => {
-						const nodeParsed = parseInt(node, 16);
-						if (isNaN(nodeParsed)) {
-							return;
-						}
-
-						const xCoord = col * mapData.nodeWidth;
-						const yCoord = row * mapData.nodeHeight;
-						const r = new fabric.Rect({
-							left: xCoord,
-							top: yCoord,
-							fill: mapData.fillColor,
-							width: mapData.nodeWidth,
-							height: mapData.nodeHeight,
-							selectable: false,
-						});
-
-						this.canvas.add(r);
-
-						if (
-							mapData.highlight &&
-							mapData.highlight.x === col &&
-							mapData.highlight.y === row
-						) {
-							const h = new fabric.Rect({
-								left: xCoord,
-								top: yCoord,
-								fill: "#fff",
-								width: mapData.nodeWidth,
-								height: mapData.nodeHeight,
-								opacity: 0,
-								selectable: false,
-							});
-							this.canvas.add(h);
-
-							const animateOn = () => {
-								h.animate("opacity", 1, {
-									duration: 250,
-									onComplete: animateOff,
-									onChange: this.canvas.renderAll.bind(
-										this.canvas
-									),
-								});
-							};
-
-							const animateOff = () => {
-								h.animate("opacity", 0, {
-									duration: 250,
-									onComplete: () =>
-										setTimeout(animateOn, 500),
-									onChange: this.canvas.renderAll.bind(
-										this.canvas
-									),
-								});
-							};
-
-							animateOn();
-						}
-
-						const borders: number[] = [];
-						borders.push(nodeParsed & BORDER_TOP);
-						borders.push(nodeParsed & BORDER_RIGHT);
-						borders.push(nodeParsed & BORDER_BOTTOM);
-						borders.push(nodeParsed & BORDER_LEFT);
-
-						if (borders) {
-							borders.forEach((borderDir) => {
-								let startX: number,
-									startY: number,
-									endX: number,
-									endY: number;
-
-								if (borderDir === BORDER_TOP) {
-									startX = xCoord;
-									startY = yCoord;
-									endX = xCoord + mapData.nodeWidth;
-									endY = startY;
-								} else if (borderDir === BORDER_BOTTOM) {
-									startX = xCoord;
-									startY = yCoord + mapData.nodeHeight;
-									endX = xCoord + mapData.nodeWidth;
-									endY = startY;
-								} else if (borderDir === BORDER_RIGHT) {
-									startX = xCoord + mapData.nodeWidth;
-									startY = yCoord;
-									endX = startX;
-									endY = yCoord + mapData.nodeHeight;
-								} else if (borderDir === BORDER_LEFT) {
-									startX = xCoord;
-									startY = yCoord;
-									endX = startX;
-									endY = yCoord + mapData.nodeHeight;
-								} else {
-									return;
-								}
-
-								const l = new fabric.Line(
-									[startX, startY, endX, endY],
-									{
-										stroke: mapData.borderColor,
-										strokeWidth: 2,
-										strokeLineJoin: "round",
-										selectable: false,
-									}
-								);
-
-								this.canvas.add(l);
-							});
-						}
+						this.drawMapNode(mapData, node, row, col);
 					});
 			});
+	}
 
+	drawGridLines(mapData: CanvasMapData) {
 		// grid lines
 		//vert
 		let c = 0;
-		for (c = 0; c <= mapData.gridWidth; c++) {
-			const startX = c * mapData.nodeWidth;
+		for (c = 0; c <= mapData.gridCols; c++) {
+			const startX = c * mapData.blockWidth;
 			const startY = 0;
 			const endX = startX;
-			const endY = mapData.gridHeight * mapData.nodeHeight; // TODO: infer this?
+			const endY = mapData.gridRows * mapData.blockHeight; // TODO: infer this?
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
 				stroke: mapData.borderColor,
@@ -236,10 +186,10 @@ class CanvasMap {
 			this.canvas.add(l);
 		}
 		//hori
-		for (c = 0; c <= mapData.gridHeight; c++) {
+		for (c = 0; c <= mapData.gridRows; c++) {
 			const startX = 0;
-			const startY = c * mapData.nodeHeight;
-			const endX = mapData.gridWidth * mapData.nodeWidth;
+			const startY = c * mapData.blockHeight;
+			const endX = mapData.gridCols * mapData.blockWidth;
 			const endY = startY;
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
@@ -249,6 +199,128 @@ class CanvasMap {
 			});
 
 			this.canvas.add(l);
+		}
+	}
+
+	drawMapNode(
+		mapData: CanvasMapData,
+		node: string,
+		row: number,
+		col: number
+	) {
+		const nodeParsed = parseInt(node, 16);
+		if (isNaN(nodeParsed)) {
+			return;
+		}
+
+		const xCoord = col * mapData.blockWidth;
+		const yCoord = row * mapData.blockHeight;
+		const r = new fabric.Rect({
+			left: xCoord,
+			top: yCoord,
+			fill: mapData.color,
+			width: mapData.blockWidth,
+			height: mapData.blockHeight,
+			selectable: false,
+		});
+
+		this.canvas.add(r);
+
+		if (
+			mapData.highlight &&
+			mapData.highlight.x === col &&
+			mapData.highlight.y === row
+		) {
+			this.drawMapNodeHighlight(mapData, xCoord, yCoord);
+		}
+
+		this.drawMapNodeBorders(mapData, nodeParsed, xCoord, yCoord);
+	}
+
+	drawMapNodeHighlight(
+		mapData: CanvasMapData,
+		xCoord: number,
+		yCoord: number
+	) {
+		const h = new fabric.Rect({
+			left: xCoord,
+			top: yCoord,
+			fill: mapData.highlightColor,
+			width: mapData.blockWidth,
+			height: mapData.blockHeight,
+			opacity: 0,
+			selectable: false,
+		});
+		this.canvas.add(h);
+
+		const animateOn = () => {
+			h.animate("opacity", 1, {
+				duration: 250,
+				onComplete: animateOff,
+				onChange: this.canvas.renderAll.bind(this.canvas),
+			});
+		};
+
+		const animateOff = () => {
+			h.animate("opacity", 0, {
+				duration: 250,
+				onComplete: () => setTimeout(animateOn, 500),
+				onChange: this.canvas.renderAll.bind(this.canvas),
+			});
+		};
+
+		animateOn();
+	}
+
+	drawMapNodeBorders(
+		mapData: CanvasMapData,
+		node: number,
+		xCoord: number,
+		yCoord: number
+	) {
+		const borders: number[] = [];
+		borders.push(node & BORDER_TOP);
+		borders.push(node & BORDER_RIGHT);
+		borders.push(node & BORDER_BOTTOM);
+		borders.push(node & BORDER_LEFT);
+
+		if (borders) {
+			borders.forEach((borderDir) => {
+				let startX: number, startY: number, endX: number, endY: number;
+
+				if (borderDir === BORDER_TOP) {
+					startX = xCoord;
+					startY = yCoord;
+					endX = xCoord + mapData.blockWidth;
+					endY = startY;
+				} else if (borderDir === BORDER_BOTTOM) {
+					startX = xCoord;
+					startY = yCoord + mapData.blockHeight;
+					endX = xCoord + mapData.blockWidth;
+					endY = startY;
+				} else if (borderDir === BORDER_RIGHT) {
+					startX = xCoord + mapData.blockWidth;
+					startY = yCoord;
+					endX = startX;
+					endY = yCoord + mapData.blockHeight;
+				} else if (borderDir === BORDER_LEFT) {
+					startX = xCoord;
+					startY = yCoord;
+					endX = startX;
+					endY = yCoord + mapData.blockHeight;
+				} else {
+					return;
+				}
+
+				const l = new fabric.Line([startX, startY, endX, endY], {
+					stroke: mapData.borderColor,
+					strokeWidth: 2,
+					strokeLineJoin: "round",
+					selectable: false,
+				});
+
+				this.canvas.add(l);
+			});
 		}
 	}
 }
