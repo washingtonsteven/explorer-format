@@ -1,34 +1,18 @@
 import { fabric } from "fabric";
-import nodeTest from "node:test";
 
 // TODO: maps that are larger than the canvas, allow for zoom, pan, etc.
 // See: http://fabricjs.com/fabric-intro-part-5#pan_zoom
 
-// Use the symbol in the comment to specify border on the particular node
-// It's just hex
-// i.e. node "8" has a left and top border, "7" is left and bottom, etc.
-// 73333336 represents a "floor" i.e. |_ _ _ _ _ _ _ _|
-// b through e are "end caps"
-// f is just a box
-// Any other symbol renders nothing. "x" is a good placeholder. You could use space i guess.
-const NODE_BORDER_TABLE = [
-	"", // 0
-	"t", // 1
-	"r", // 2
-	"b", // 3
-	"l", // 4
-	"tr", // 5
-	"rb", // 6
-	"bl", // 7
-	"lt", // 8
-	"tb", // 9
-	"lr", // a
-	"rtl", // b
-	"trb", // c
-	"rbl", // d
-	"blt", // e
-	"tblr", // f
-];
+// Set map.nodes to a string containing any characters
+// If the character is valid hex (i.e. 0-9 and a-f), it will be interpreted with a border
+// bit masks go top, right, bottom, left from most significant to least.
+// e.g. "a" => 0xa => 0b1010 => top and bottom borders
+// e.g. "5" => 0x5 => 0b0101 => right and left borders
+
+const BORDER_TOP = 0x8;
+const BORDER_RIGHT = 0x4;
+const BORDER_BOTTOM = 0x2;
+const BORDER_LEFT = 0x1;
 
 class CanvasMap {
 	canvasElem: HTMLCanvasElement;
@@ -61,10 +45,10 @@ class CanvasMap {
 			fillColor: "#ffd700",
 			borderColor: "#333",
 			nodes: `
-				8111115xxx
-				400003015x
-				40036x402x
-				736xxx733c
+				988888cxxx
+				10000208cx
+				10026x104x
+				326xxx326e
 			`,
 			highlight: {
 				x: 3,
@@ -123,7 +107,8 @@ class CanvasMap {
 				line.trim()
 					.split("")
 					.forEach((node, col) => {
-						if (isNaN(parseInt(node, 16))) {
+						const nodeParsed = parseInt(node, 16);
+						if (isNaN(nodeParsed)) {
 							return;
 						}
 
@@ -180,28 +165,38 @@ class CanvasMap {
 							animateOn();
 						}
 
-						const borders = NODE_BORDER_TABLE[parseInt(node, 16)];
+						const borders: number[] = [];
+						borders.push(nodeParsed & BORDER_TOP);
+						borders.push(nodeParsed & BORDER_RIGHT);
+						borders.push(nodeParsed & BORDER_BOTTOM);
+						borders.push(nodeParsed & BORDER_LEFT);
 
 						if (borders) {
-							borders.split("").forEach((borderDir) => {
-								// top
-								let startX = xCoord;
-								let startY = yCoord;
-								let endX = xCoord + mapData.nodeWidth;
-								let endY = startY;
+							borders.forEach((borderDir) => {
+								let startX, startY, endX, endY;
 
-								if (borderDir === "b") {
-									startY = yCoord + mapData.nodeHeight;
+								if (borderDir === BORDER_TOP) {
+									startX = xCoord;
+									startY = yCoord;
+									endX = xCoord + mapData.nodeWidth;
 									endY = startY;
-								}
-								if (borderDir === "r") {
+								} else if (borderDir === BORDER_BOTTOM) {
+									startX = xCoord;
+									startY = yCoord + mapData.nodeHeight;
+									endX = xCoord + mapData.nodeWidth;
+									endY = startY;
+								} else if (borderDir === BORDER_RIGHT) {
 									startX = xCoord + mapData.nodeWidth;
+									startY = yCoord;
 									endX = startX;
 									endY = yCoord + mapData.nodeHeight;
-								}
-								if (borderDir === "l") {
+								} else if (borderDir === BORDER_LEFT) {
+									startX = xCoord;
+									startY = yCoord;
 									endX = startX;
 									endY = yCoord + mapData.nodeHeight;
+								} else {
+									return;
 								}
 
 								const l = new fabric.Line(
