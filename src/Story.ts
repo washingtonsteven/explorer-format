@@ -5,6 +5,7 @@ import CanvasMap, { type CanvasMapDefaultData } from "./CanvasMap";
 
 const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid";
 const LAST_PASSAGE_PID_STATEKEY = "lastPassagePid";
+export const MAP_DISPLAYED_STATEKEY = "mapDisplayed";
 
 class Story {
 	name: string;
@@ -79,6 +80,7 @@ class Story {
 		this.state = new State({
 			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
 			[LAST_PASSAGE_PID_STATEKEY]: null,
+			[MAP_DISPLAYED_STATEKEY]: false,
 		});
 
 		this.renderer = new HandlebarsRenderer(this);
@@ -119,6 +121,8 @@ class Story {
 			passage = passageOrPid;
 		}
 
+		this.state.set(MAP_DISPLAYED_STATEKEY, false);
+
 		this.state.set(
 			LAST_PASSAGE_PID_STATEKEY,
 			this.state.get(CURRENT_PASSAGE_PID_STATEKEY)
@@ -128,6 +132,10 @@ class Story {
 		const passageContent = this.renderer.render(passage.richContent);
 
 		node.innerHTML = passageContent;
+
+		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
+			this.canvasMap.clear();
+		}
 	}
 
 	displayCurrentPassage(node: HTMLElement) {

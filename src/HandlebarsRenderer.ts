@@ -1,6 +1,7 @@
 import Handlebars from "handlebars";
 import { HighlightPoint } from "./CanvasMap";
 import type Story from "./Story";
+import { MAP_DISPLAYED_STATEKEY } from "./Story";
 import { unescape } from "./util";
 
 class HandlebarsRenderer {
@@ -45,6 +46,7 @@ class HandlebarsRenderer {
 			}
 
 			this.story.canvasMap.displayMap(mapName, highlight);
+			this.story.state.set(MAP_DISPLAYED_STATEKEY, true);
 		});
 	}
 
