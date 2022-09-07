@@ -1,11 +1,11 @@
 import CanvasMap from "./CanvasMap";
 import Story from "./Story";
 
-type ExplorerGlobal = {
+interface ExplorerGlobal {
 	__explorer: {
 		story: Story;
 	};
-};
+}
 
 type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 
@@ -61,6 +61,4 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 
 	// Let's go!
 	story.displayCurrentPassage(passageContainer);
-
-	new CanvasMap();
 })();

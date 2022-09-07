@@ -26,7 +26,7 @@ export type HighlightPoint = {
 	y: number;
 } | null;
 
-export type ViewportSize = {
+type ViewportSize = {
 	width: number;
 	height: number;
 };
@@ -216,7 +216,7 @@ class CanvasMap {
 			const startX = c * mapData.blockWidth;
 			const startY = 0;
 			const endX = startX;
-			const endY = mapData.gridRows * mapData.blockHeight; // TODO: infer this?
+			const endY = mapData.gridRows * mapData.blockHeight;
 
 			const l = new fabric.Line([startX, startY, endX, endY], {
 				stroke: mapData.borderColor,
