@@ -1,10 +1,11 @@
+import CanvasMap from "./CanvasMap";
 import Story from "./Story";
 
-type ExplorerGlobal = {
+interface ExplorerGlobal {
 	__explorer: {
 		story: Story;
 	};
-};
+}
 
 type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 

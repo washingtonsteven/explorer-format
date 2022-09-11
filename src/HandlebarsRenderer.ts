@@ -1,5 +1,7 @@
 import Handlebars from "handlebars";
+import { HighlightPoint } from "./CanvasMap";
 import type Story from "./Story";
+import { MAP_DISPLAYED_STATEKEY } from "./Story";
 import { unescape } from "./util";
 
 class HandlebarsRenderer {
@@ -26,6 +28,25 @@ class HandlebarsRenderer {
 			(function () {
 				eval(scriptContent);
 			}.call(this.getScriptContext()));
+		});
+
+		Handlebars.registerHelper("display_map", (options) => {
+			const mapName: string = options.hash["name"];
+			const highlightCoordString: string = options.hash["highlight"];
+			let highlight: HighlightPoint = null;
+
+			if (highlightCoordString) {
+				const [xString, yString] = highlightCoordString.split(",");
+				const x = parseInt(xString);
+				const y = parseInt(yString);
+
+				if (!isNaN(x) && !isNaN(y)) {
+					highlight = { x, y };
+				}
+			}
+
+			this.story.canvasMap.displayMap(mapName, highlight);
+			this.story.state.set(MAP_DISPLAYED_STATEKEY, true);
 		});
 	}
 
