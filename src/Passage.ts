@@ -20,6 +20,7 @@ class Passage {
 	position: { x: number; y: number };
 	size: { width: number; height: number };
 	links: Link[];
+	directionalLinks: Link[];
 
 	constructor(passageNode: HTMLElement) {
 		const pid = passageNode.getAttribute("pid");
@@ -59,9 +60,14 @@ class Passage {
 		this.position = position;
 		this.size = size;
 		this.rawContent = content;
-		const { links, content: contentWithoutLinks } = extractLinks(content);
+		const {
+			links,
+			directionalLinks,
+			content: contentWithoutLinks,
+		} = extractLinks(content);
 		this.rawContentWithoutLinks = contentWithoutLinks;
 		this.links = links;
+		this.directionalLinks = directionalLinks;
 	}
 
 	get richContent() {

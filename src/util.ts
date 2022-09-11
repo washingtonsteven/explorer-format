@@ -4,6 +4,9 @@ import { Link } from "./Passage";
 // [[alias|passageName]] - group 1 is alias or passageName if there is no alias, group 2 is passageName if there's an alias
 const linkRegex = new RegExp(/\[\[([^|\]]+)\|?([^\]]*)\]\]/, "g");
 
+// Having a link alias set to one of these will cause that to be considered a "directional" link
+const directionals = ["north", "south", "east", "west"];
+
 // replace [[link]]s with <a data-passage-name="link">link</a>
 export const convertLinks = (content: string) => {
 	return content.replace(linkRegex, (m, group1, group2) => {
@@ -19,15 +22,22 @@ export const convertLinks = (content: string) => {
 // Returns all link data as JSON, and removes links from the passage
 export const extractLinks = (content: string) => {
 	const links: Link[] = [];
+	const directionalLinks: Link[] = [];
 	const contentWithoutLinks = content.replace(
 		linkRegex,
 		(m, group1, group2) => {
 			const passageName = group2 || group1;
 			const alias = group2 ? group1 : passageName;
-			links.push({
+			const link: Link = {
 				passageName,
 				alias,
-			});
+			};
+
+			if (directionals.includes(alias.toLowerCase())) {
+				directionalLinks.push(link);
+			} else {
+				links.push(link);
+			}
 
 			// delete the link
 			return "";
@@ -36,6 +46,7 @@ export const extractLinks = (content: string) => {
 
 	return {
 		links,
+		directionalLinks,
 		content: contentWithoutLinks,
 	};
 };

@@ -7,6 +7,7 @@ $mobile_bp: 950px;
 	--accent1: #ffd700;
 	--accent1bright: #ffa900;
 	--accent1dim: #c8a937;
+	--disabled: #ccc;
 }
 
 body {
@@ -121,10 +122,21 @@ a {
 		box-shadow: 0 0 2px var(--accent1), 0 0 2px inset var(--accent1);
 		text-shadow: 0 0 1px currentColor;
 
-		&:hover {
+		&[data-passage-name="empty"] {
+			opacity: 0;
+		}
+
+		&:hover:not(:disabled) {
 			background-color: var(--accent1);
 			color: var(--textDark);
 			cursor: pointer;
+		}
+
+		&:disabled {
+			border-color: var(--disabled);
+			color: var(--disabled);
+			opacity: 0.5;
+			cursor: not-allowed;
 		}
 
 		&.north {

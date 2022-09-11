@@ -85,19 +85,19 @@ console.log(this.get("currentPassagePid"));
 
 Now we are in it!
 
-[[Go East]]
+[[East|Go East]]
 
-{{#display_map name="Map1" highlight="9,10"}}{{/display_map}}
+{{#display_map name="Map1" highlight="8,7"}}{{/display_map}}
 
 :: Go East
 
 Slide to the right
 
-[[Go West|Explore]]
+[[West|Explore]]
 [[Go Nowhere]] 
 [[Start]]
 
-{{#display_map name="Map1" highlight="6,6"}}{{/display_map}}
+{{#display_map name="Map1" highlight="9,7"}}{{/display_map}}
 
 :: Go Nowhere
 

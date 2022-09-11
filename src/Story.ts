@@ -148,15 +148,53 @@ class Story {
 
 		if (inputNode) {
 			const buttonContainer = inputNode.querySelector(".buttons");
+			const directionalContainer =
+				inputNode.querySelector(".directionals");
 			if (buttonContainer) {
 				buttonContainer.innerHTML = "";
 
-				passage.links.forEach((link) => {
+				const linkList = [...passage.links];
+
+				if (!linkList.length) {
+					// hack to make sure the button container isn't less than one button tall
+					linkList.push({ alias: "empty", passageName: "empty" });
+				}
+
+				linkList.forEach((link) => {
 					const button = document.createElement("button");
 					button.innerHTML = link.alias;
 					button.dataset.passageName = link.passageName;
 					buttonContainer.appendChild(button);
 				});
+
+				if (directionalContainer) {
+					const directionalButtons = [
+						...directionalContainer.querySelectorAll("button"),
+					];
+					directionalButtons.forEach((button) => {
+						button.disabled = true;
+						button.dataset.passageName = "";
+					});
+
+					if (passage.directionalLinks) {
+						passage.directionalLinks.forEach((link) => {
+							const button = directionalButtons.find((b) => {
+								return b.classList.contains(
+									link.alias.toLowerCase()
+								);
+							});
+
+							if (button) {
+								button.disabled = false;
+								button.dataset.passageName = link.passageName;
+							} else {
+								console.warn(
+									`Tried to set up a directional called ${link.alias.toLowerCase()}, but that button wasn't found.`
+								);
+							}
+						});
+					}
+				}
 			}
 		}
 	}
