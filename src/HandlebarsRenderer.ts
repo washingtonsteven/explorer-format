@@ -48,6 +48,25 @@ class HandlebarsRenderer {
 			this.story.canvasMap.displayMap(mapName, highlight);
 			this.story.state.set(MAP_DISPLAYED_STATEKEY, true);
 		});
+
+		Handlebars.registerHelper("type", (options) => {
+			const speed: number = parseInt(options.hash["speed"]) || 40;
+			const text: string = options.fn(); // So far, this doesn't support markup in the typed text, even formatting like bold and stuff.
+
+			const textNodes = text.split("").map((char, i) => {
+				const span = document.createElement("span");
+				span.innerHTML = char;
+				span.style.opacity = "0";
+				span.style.animationDuration = "1ms";
+				span.style.animationDelay = `${i * speed}ms`;
+				span.style.animationName = "appear";
+				span.style.animationFillMode = "both";
+
+				return span;
+			});
+
+			return textNodes.map((n) => n.outerHTML).join("");
+		});
 	}
 
 	render(content: string) {

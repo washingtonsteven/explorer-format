@@ -62,6 +62,8 @@ Age is {{age}}
 
 <a href="http://google.com">google</a>
 
+{{#type}}This text should be typed out maybe?{{/type}}
+
 [[Next]]
 
 [[Next with alias|Next]]
