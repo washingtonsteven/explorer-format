@@ -62,21 +62,35 @@ class CanvasMap {
 
 		this.canvasElem = canvasElem;
 
-		const viewWidth = parseInt(
-			this.canvasElem.getAttribute("width") || "300"
-		);
-		const viewHeight = parseInt(
-			this.canvasElem.getAttribute("height") || "300"
-		);
-		this.viewportSize = {
-			width: isNaN(viewWidth) ? 300 : viewWidth,
-			height: isNaN(viewHeight) ? 300 : viewHeight,
-		};
-
 		this.canvas = new fabric.Canvas(this.canvasElem, {
 			selection: false,
 		});
 		this.initialVPT = this.canvas.viewportTransform;
+
+		const canvasContainer = this.canvas.getElement().parentElement;
+		if (canvasContainer && canvasContainer.parentElement) {
+			// Take the container out of the normal flow, meaning the rest of the
+			// parent will size according to its other content
+			const originalPosition = canvasContainer.style.position; // usually going to be 'relative', but set by fabric.js
+			canvasContainer.style.position = "absolute";
+
+			// Set the dimensions based on the new width
+			this.canvas.setDimensions({
+				width: Math.min(300, canvasContainer.parentElement.offsetWidth),
+				height: Math.min(
+					300,
+					canvasContainer.parentElement.offsetWidth
+				),
+			});
+
+			// put it back
+			canvasContainer.style.position = originalPosition;
+		}
+
+		this.viewportSize = {
+			width: this.canvas.getWidth(),
+			height: this.canvas.getHeight(),
+		};
 
 		this.canvas.on("mouse:wheel", (opt) => {
 			const delta = opt.e.deltaY;

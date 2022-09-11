@@ -1,8 +1,12 @@
+$mobile_bp: 950px;
+
 :root {
 	--background: #222;
 	--text: #ddd;
 	--textDark: #111;
 	--accent1: #ffd700;
+	--accent1bright: #ffa900;
+	--accent1dim: #c8a937;
 }
 
 body {
@@ -12,12 +16,30 @@ body {
 	text-shadow: 0 0 1px currentColor;
 }
 
+a {
+	color: var(--accent1bright);
+	font-weight: bold;
+
+	&:visited {
+		color: var(--accent1dim);
+	}
+
+	&:hover {
+		color: var(--accent1bright);
+	}
+}
+
 #interface {
 	padding: 1em 4em;
 	display: grid;
 	gap: 4em;
 	justify-content: center;
 	grid-template-columns: repeat(12, 1fr);
+
+	@media screen and (max-width: $mobile_bp) {
+		grid-template-columns: 1fr;
+		gap: 1em;
+	}
 }
 
 .window {
@@ -31,6 +53,13 @@ body {
 
 	&#tw-input {
 		grid-column: 9 / span 4;
+	}
+
+	@media screen and (max-width: $mobile_bp) {
+		&#tw-story,
+		&#tw-input {
+			grid-column: 1 / span 1;
+		}
 	}
 
 	.titlebar {
@@ -60,8 +89,9 @@ body {
 	}
 
 	.buttons {
-		display: grid;
-		grid-gap: 1em;
+		display: flex;
+		gap: 1em;
+		flex-wrap: wrap;
 		justify-content: center;
 		grid-template-columns: repeat(3, 1fr);
 		margin: 1.5em auto;
@@ -72,13 +102,14 @@ body {
 		margin: 1.5em auto;
 		grid-template-columns: repeat(3, 1fr);
 		justify-content: center;
+		max-width: 150px;
 	}
 
-	// .buttons,
-	// .directionals {
-	// 	max-width: 50%;
-	// 	min-width: 200px;
-	// }
+	.map {
+		display: flex;
+		justify-content: center;
+		margin: 1.5em auto;
+	}
 
 	button {
 		background-color: var(--background);
