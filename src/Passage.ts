@@ -1,13 +1,25 @@
 import { marked } from "marked";
-import { fixHandlebarsAttributeQuotes, parseLinks, unescape } from "./util";
+import {
+	fixHandlebarsAttributeQuotes,
+	convertLinks,
+	unescape,
+	extractLinks,
+} from "./util";
+
+export type Link = {
+	passageName: string;
+	alias: string;
+};
 
 class Passage {
 	pid: string;
 	name: string;
 	rawContent: string;
+	rawContentWithoutLinks: string;
 	tags: string[];
 	position: { x: number; y: number };
 	size: { width: number; height: number };
+	links: Link[];
 
 	constructor(passageNode: HTMLElement) {
 		const pid = passageNode.getAttribute("pid");
@@ -47,11 +59,14 @@ class Passage {
 		this.position = position;
 		this.size = size;
 		this.rawContent = content;
+		const { links, content: contentWithoutLinks } = extractLinks(content);
+		this.rawContentWithoutLinks = contentWithoutLinks;
+		this.links = links;
 	}
 
 	get richContent() {
-		const linksParsed = parseLinks(this.rawContent);
-		const unescaped = unescape(linksParsed);
+		// const linksParsed = convertLinks(this.rawContentWithoutLinks);
+		const unescaped = unescape(this.rawContentWithoutLinks);
 		const html = marked.parse(unescaped);
 
 		return fixHandlebarsAttributeQuotes(html);

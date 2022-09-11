@@ -18,6 +18,21 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	}
 	const story = new Story(rootStoryDataNode);
 
+	const navigateToPassageName = (
+		passageName: string,
+		passageContainer: HTMLElement,
+		titleNode?: HTMLElement | null,
+		inputNode?: HTMLElement
+	) => {
+		const passage = story.getPassageByName(passageName);
+		if (!passage) {
+			throw new Error(
+				`Couldn't find passage with name: "${passageName}"!`
+			);
+		}
+		story.displayPassage(passage, passageContainer, titleNode, inputNode);
+	};
+
 	// Find story DOM
 	const storyContainer = document.querySelector("#tw-story");
 	if (!storyContainer) {
@@ -30,6 +45,14 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	if (!passageContainer) {
 		throw new Error(`Missing passage container #tw-passage`);
 	}
+
+	const inputContainer = document.querySelector<HTMLElement>("#tw-input");
+	if (!inputContainer) {
+		throw new Error(`Missing input container #tw-input`);
+	}
+
+	const titleNode =
+		passageContainer.parentNode?.querySelector<HTMLElement>(".titlebar");
 
 	// Handle link clicks
 	storyContainer.addEventListener("click", (event) => {
@@ -44,15 +67,38 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 			target.dataset.passageName
 		) {
 			const passageName = target.dataset.passageName;
-			const passage = story.getPassageByName(passageName);
-			if (!passage) {
-				throw new Error(
-					`Couldn't find passage with name: "${passageName}"!`
-				);
-			}
-			story.displayPassage(passage, passageContainer);
+			navigateToPassageName(
+				passageName,
+				passageContainer,
+				titleNode,
+				inputContainer
+			);
 		}
 	});
+
+	if (inputContainer) {
+		// Handle input button clicks
+		inputContainer.addEventListener("click", (event) => {
+			if (!event.target) {
+				return;
+			}
+
+			const target = event.target as HTMLElement;
+
+			if (
+				target.tagName.toLowerCase() === "button" &&
+				target.dataset.passageName
+			) {
+				const passageName = target.dataset.passageName;
+				navigateToPassageName(
+					passageName,
+					passageContainer,
+					titleNode,
+					inputContainer
+				);
+			}
+		});
+	}
 
 	// Let's make the story accessible
 	(window as WindowWithExplorerGlobal).__explorer = {
@@ -60,5 +106,5 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	};
 
 	// Let's go!
-	story.displayCurrentPassage(passageContainer);
+	story.displayCurrentPassage(passageContainer, titleNode, inputContainer);
 })();

@@ -9,12 +9,21 @@
 		"build-basic": "yarn build-format && tweego -o tests/test-stories/output/index.html -l --log-files tests/test-stories/basic.twee"
 	},
 	"devDependencies": {
+		"@parcel/transformer-sass": "2.7.0",
 		"@types/fabric": "^4.5.12",
 		"parcel": "^2.7.0"
 	},
 	"targets": {
 		"default": {
 			"source": "src/index.ts",
+			"distDir": "build",
+			"sourceMap": {
+				"inline": true,
+				"inlineSources": true
+			}
+		},
+		"scss": {
+			"source": "src/css/main.scss",
 			"distDir": "build",
 			"sourceMap": {
 				"inline": true,

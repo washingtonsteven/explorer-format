@@ -1,0 +1,118 @@
+:root {
+	--background: #222;
+	--text: #ddd;
+	--textDark: #111;
+	--accent1: #ffd700;
+}
+
+body {
+	background-color: var(--background);
+	color: var(--text);
+	font-family: monospace;
+	text-shadow: 0 0 1px currentColor;
+}
+
+#interface {
+	padding: 1em 4em;
+	display: grid;
+	gap: 4em;
+	justify-content: center;
+	grid-template-columns: repeat(12, 1fr);
+}
+
+.window {
+	padding-top: 0;
+	border: solid 1px var(--accent1);
+	box-shadow: 0 0 3px var(--accent1), 0 0 3px inset var(--accent1);
+
+	&#tw-story {
+		grid-column: 1 / span 8;
+	}
+
+	&#tw-input {
+		grid-column: 9 / span 4;
+	}
+
+	.titlebar {
+		padding: 0.3em 0.5em;
+		background-color: var(--accent1);
+		color: var(--textDark);
+		display: flex;
+		justify-content: space-between;
+		box-shadow: 0 1px 3px var(--accent1);
+
+		&::after {
+			content: "x";
+			height: 100%;
+		}
+	}
+
+	.content {
+		padding: 1em;
+		min-height: 300px;
+
+		hr {
+			width: 50%;
+			border-color: var(--accent1);
+			transform: scaleX(1.25);
+			box-shadow: 0 0 2px var(--accent1);
+		}
+	}
+
+	.buttons {
+		display: grid;
+		grid-gap: 1em;
+		justify-content: center;
+		grid-template-columns: repeat(3, 1fr);
+		margin: 1.5em auto;
+	}
+
+	.directionals {
+		display: grid;
+		margin: 1.5em auto;
+		grid-template-columns: repeat(3, 1fr);
+		justify-content: center;
+	}
+
+	// .buttons,
+	// .directionals {
+	// 	max-width: 50%;
+	// 	min-width: 200px;
+	// }
+
+	button {
+		background-color: var(--background);
+		color: var(--accent1);
+		border: solid 1px var(--accent1);
+		padding: 0.5em 1.5em;
+		border-radius: 0.75em;
+		font-family: monospace;
+		box-shadow: 0 0 2px var(--accent1), 0 0 2px inset var(--accent1);
+		text-shadow: 0 0 1px currentColor;
+
+		&:hover {
+			background-color: var(--accent1);
+			color: var(--textDark);
+			cursor: pointer;
+		}
+
+		&.north {
+			grid-column-start: 2;
+		}
+
+		&.west {
+			grid-column-start: 1;
+			grid-row-start: 2;
+		}
+
+		&.east {
+			grid-column-start: 3;
+			grid-row-start: 2;
+		}
+
+		&.south {
+			grid-column-start: 2;
+			grid-row-start: 3;
+		}
+	}
+}

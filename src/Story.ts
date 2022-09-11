@@ -107,7 +107,12 @@ class Story {
 		return this.passages.find((passage) => passage.name === name) || null;
 	}
 
-	displayPassage(passageOrPid: string | Passage, node: HTMLElement) {
+	displayPassage(
+		passageOrPid: string | Passage,
+		passageNode: HTMLElement,
+		titleNode?: HTMLElement | null,
+		inputNode?: HTMLElement
+	) {
 		let passage: Passage;
 		if (typeof passageOrPid === "string") {
 			const foundPassage = this.getPassageByPid(passageOrPid);
@@ -131,15 +136,42 @@ class Story {
 
 		const passageContent = this.renderer.render(passage.richContent);
 
-		node.innerHTML = passageContent;
+		passageNode.innerHTML = passageContent;
 
 		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
 			this.canvasMap.clear();
 		}
+
+		if (titleNode) {
+			titleNode.innerHTML = passage.name;
+		}
+
+		if (inputNode) {
+			const buttonContainer = inputNode.querySelector(".buttons");
+			if (buttonContainer) {
+				buttonContainer.innerHTML = "";
+
+				passage.links.forEach((link) => {
+					const button = document.createElement("button");
+					button.innerHTML = link.alias;
+					button.dataset.passageName = link.passageName;
+					buttonContainer.appendChild(button);
+				});
+			}
+		}
 	}
 
-	displayCurrentPassage(node: HTMLElement) {
-		this.displayPassage(this.currentPassage, node);
+	displayCurrentPassage(
+		passageNode: HTMLElement,
+		titleNode?: HTMLElement | null,
+		inputNode?: HTMLElement
+	) {
+		this.displayPassage(
+			this.currentPassage,
+			passageNode,
+			titleNode,
+			inputNode
+		);
 	}
 }
 

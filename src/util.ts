@@ -1,7 +1,11 @@
-export const parseLinks = (content: string) => {
-	// [[alias|passageName]] - group 1 is alias or passageName if there is no alias, group 2 is passageName if there's an alias
-	const linkRegex = new RegExp(/\[\[([^|\]]+)\|?([^\]]*)\]\]/, "g");
+import { Link } from "./Passage";
 
+// regex for finding [[links]] in a string
+// [[alias|passageName]] - group 1 is alias or passageName if there is no alias, group 2 is passageName if there's an alias
+const linkRegex = new RegExp(/\[\[([^|\]]+)\|?([^\]]*)\]\]/, "g");
+
+// replace [[link]]s with <a data-passage-name="link">link</a>
+export const convertLinks = (content: string) => {
 	return content.replace(linkRegex, (m, group1, group2) => {
 		const passageName = group2 || group1;
 		const alias = group2 ? group1 : passageName;
@@ -10,6 +14,30 @@ export const parseLinks = (content: string) => {
 		link.dataset.passageName = passageName;
 		return link.outerHTML;
 	});
+};
+
+// Returns all link data as JSON, and removes links from the passage
+export const extractLinks = (content: string) => {
+	const links: Link[] = [];
+	const contentWithoutLinks = content.replace(
+		linkRegex,
+		(m, group1, group2) => {
+			const passageName = group2 || group1;
+			const alias = group2 ? group1 : passageName;
+			links.push({
+				passageName,
+				alias,
+			});
+
+			// delete the link
+			return "";
+		}
+	);
+
+	return {
+		links,
+		content: contentWithoutLinks,
+	};
 };
 
 export const unescape = (content: string) => {

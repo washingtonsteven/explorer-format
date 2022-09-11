@@ -25,6 +25,14 @@ const formatSource = fs.readFileSync(path.resolve(ROOT_DIR, "build/index.js"), {
 	encoding: "utf-8",
 });
 
+// Get the bundled css
+const formatCss = fs.readFileSync(
+	path.resolve(ROOT_DIR, "build/css/main.css"),
+	{
+		encoding: "utf-8",
+	}
+);
+
 //Render src/index.mustache with format js included
 const sourceTemplate = fs.readFileSync(
 	path.resolve(ROOT_DIR, "src/index.hbs"),
@@ -33,6 +41,7 @@ const sourceTemplate = fs.readFileSync(
 
 storyJSON.source = Handlebars.compile(sourceTemplate)({
 	format_js: formatSource,
+	format_css: formatCss,
 });
 
 // Write storyJSON to format.js

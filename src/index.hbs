@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8">
-		<link rel="shortcut icon" href="#">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" href="#" />
 		<title>\{{STORY_NAME}}</title>
+		<style type="text/css">{{{format_css}}}</style>
 	</head>
 	<body>
 		\{{STORY_DATA}}
-		<div id="tw-story">
-			<div id="tw-passage"></div>
+		<div id="interface">
+			<div id="tw-story" class="window">
+				<div class="titlebar"></div>
+				<div id="tw-passage" class="content"></div>
+			</div>
+			<div class="window" id="tw-input">
+				<div class="titlebar">Input Window</div>
+				<div class="content">
+					<div class="buttons"></div>
+					<hr />
+					<div class="directionals">
+						<button class="north">↑</button>
+						<button class="west">←</button>
+						<button class="east">→</button>
+						<button class="south">↓</button>
+					</div>
+					<hr />
+					<div class="map">
+						<canvas id="map" width="300" height="300"></canvas>
+					</div>
+				</div>
+			</div>
 		</div>
-		<canvas id="map" width="300" height="300"></canvas>
 		<script type="text/javascript">
 			{{{format_js}}}
 		</script>
