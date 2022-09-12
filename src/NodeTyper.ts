@@ -1,4 +1,5 @@
-// Concept generally taken from TME's NodeTyper in Sugarcube 2: https://github.com/tmedwards/sugarcube-2/blob/27903a854b7bedbb9fa60efa33e47c99bab7a359/src/lib/nodetyper.js
+// Concept pretty much taken from TME's NodeTyper in Sugarcube 2: https://github.com/tmedwards/sugarcube-2/blob/27903a854b7bedbb9fa60efa33e47c99bab7a359/src/lib/nodetyper.js
+// Which is Copyright (c) 2013-2021, Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
 // This is going to be less robust but also less jQuery so, who can say which is better (turns out most anyone)
 
 class NodeTyper {
