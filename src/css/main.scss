@@ -96,6 +96,15 @@ a {
 			transform: scaleX(1.25);
 			box-shadow: 0 0 2px var(--accent1);
 		}
+
+		&#tw-passage {
+			animation-duration: 750ms;
+			animation-fill-mode: both;
+
+			&.run-anim {
+				animation-name: appear;
+			}
+		}
 	}
 
 	.buttons {

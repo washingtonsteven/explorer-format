@@ -136,7 +136,12 @@ class Story {
 
 		const passageContent = this.renderer.render(passage.richContent);
 
-		passageNode.innerHTML = passageContent;
+		passageNode.classList.remove("run-anim");
+		passageNode.innerHTML = "";
+		setTimeout(() => {
+			passageNode.classList.add("run-anim");
+			passageNode.innerHTML = passageContent;
+		}, 1);
 
 		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
 			this.canvasMap.clear();
