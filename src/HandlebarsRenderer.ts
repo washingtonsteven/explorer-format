@@ -51,6 +51,7 @@ class HandlebarsRenderer {
 
 		Handlebars.registerHelper("type", (options) => {
 			const speed: number = parseInt(options.hash["speed"]) || 40;
+			const delay: number = parseInt(options.hash["delay"]) || 0;
 			const text: string = options.fn(); // So far, this doesn't support markup in the typed text, even formatting like bold and stuff.
 
 			const textNodes = text.split("").map((char, i) => {
@@ -58,7 +59,7 @@ class HandlebarsRenderer {
 				span.innerHTML = char;
 				span.style.opacity = "0";
 				span.style.animationDuration = "1ms";
-				span.style.animationDelay = `${i * speed}ms`;
+				span.style.animationDelay = `${delay + i * speed}ms`;
 				span.style.animationName = "appear";
 				span.style.animationFillMode = "both";
 
