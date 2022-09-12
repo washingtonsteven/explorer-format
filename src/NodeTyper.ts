@@ -18,7 +18,7 @@ class NodeTyper {
 			this.node.nodeValue = "";
 		}
 
-		let childNode;
+		let childNode: ChildNode | null;
 		while ((childNode = this.node.firstChild) !== null) {
 			this.childNodes.push(new NodeTyper(childNode, node));
 			this.node.removeChild(childNode);
