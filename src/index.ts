@@ -18,6 +18,28 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	}
 	const story = new Story(rootStoryDataNode);
 
+	const userScript = rootStoryDataNode.querySelector(
+		"script#twine-user-script"
+	);
+	if (userScript) {
+		const scriptElem = document.createElement("script");
+		scriptElem.setAttribute("type", "text/javascript");
+		scriptElem.classList.add("user-script");
+		scriptElem.innerHTML = userScript.innerHTML;
+		document.body.appendChild(scriptElem);
+	}
+
+	const userStyle = rootStoryDataNode.querySelector(
+		"style#twine-user-stylesheet"
+	);
+	if (userStyle) {
+		const styleElem = document.createElement("style");
+		styleElem.setAttribute("type", "text/css");
+		styleElem.classList.add("user-style");
+		styleElem.innerHTML = userStyle.innerHTML;
+		document.head.appendChild(styleElem);
+	}
+
 	const navigateToPassageName = (
 		passageName: string,
 		passageContainer: HTMLElement,
