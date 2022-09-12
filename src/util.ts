@@ -83,3 +83,14 @@ export const fixHandlebarsAttributeQuotes = (content: string) => {
 		return m.replace(new RegExp("&quot;", "g"), '"');
 	});
 };
+
+export const uuid = () => {
+	if (window?.crypto?.randomUUID) {
+		return window.crypto.randomUUID();
+	} else {
+		// less good, but good enough?
+		const n = () =>
+			Math.floor(Math.random() * Math.pow(2, 16)).toString(16);
+		return `${n()}-${n()}-${n()}-${n()}`;
+	}
+};

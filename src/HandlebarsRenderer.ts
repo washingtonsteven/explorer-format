@@ -2,7 +2,8 @@ import Handlebars from "handlebars";
 import { HighlightPoint } from "./CanvasMap";
 import type Story from "./Story";
 import { MAP_DISPLAYED_STATEKEY } from "./Story";
-import { unescape } from "./util";
+import { unescape, uuid } from "./util";
+import NodeTyper from "./NodeTyper";
 
 class HandlebarsRenderer {
 	story: Story;
@@ -67,6 +68,38 @@ class HandlebarsRenderer {
 			});
 
 			return textNodes.map((n) => n.outerHTML).join("");
+		});
+
+		Handlebars.registerHelper("typejs", (options) => {
+			const speed: number = parseInt(options.hash["speed"]) || 40;
+			const delay: number = parseInt(options.hash["delay"]) || 0;
+			const text: string = options.fn();
+
+			const parentNode = document.createElement("span");
+			const typerId = `typer-${uuid()}`;
+			parentNode.setAttribute("id", typerId);
+			parentNode.classList.add("typer", "typing");
+			parentNode.innerHTML = text;
+
+			const typer = new NodeTyper(parentNode);
+
+			let typeInterval;
+			setTimeout(() => {
+				typeInterval = setInterval(() => {
+					const res = typer.type();
+					if (!res) {
+						clearInterval(typeInterval);
+						(typer.node as Element).classList.remove("typing");
+						(typer.node as Element).classList.add("typed");
+					}
+					const n = document.querySelector(`#${typerId}`);
+					if (n) {
+						n.outerHTML = (typer.node as Element).outerHTML;
+					}
+				}, speed);
+			}, delay);
+
+			return parentNode.outerHTML;
 		});
 	}
 
