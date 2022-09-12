@@ -10,6 +10,12 @@ $mobile_bp: 950px;
 	--disabled: #ccc;
 }
 
+body,
+html {
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	background-color: var(--background);
 	color: var(--text);
@@ -31,7 +37,7 @@ a {
 }
 
 #interface {
-	padding: 1em 4em;
+	padding: 4em;
 	display: grid;
 	gap: 4em;
 	justify-content: center;

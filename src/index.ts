@@ -1,4 +1,3 @@
-import CanvasMap from "./CanvasMap";
 import Story from "./Story";
 
 interface ExplorerGlobal {
@@ -18,6 +17,7 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	}
 	const story = new Story(rootStoryDataNode);
 
+	// user script and style
 	const userScript = rootStoryDataNode.querySelector(
 		"script#twine-user-script"
 	);
@@ -40,6 +40,7 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 		document.head.appendChild(styleElem);
 	}
 
+	// helper func to navigate to a passage
 	const navigateToPassageName = (
 		passageName: string,
 		passageContainer: HTMLElement,
