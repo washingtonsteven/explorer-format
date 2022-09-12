@@ -44,7 +44,6 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	const navigateToPassageName = (
 		passageName: string,
 		passageContainer: HTMLElement,
-		titleNode?: HTMLElement | null,
 		inputNode?: HTMLElement
 	) => {
 		const passage = story.getPassageByName(passageName);
@@ -53,7 +52,7 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 				`Couldn't find passage with name: "${passageName}"!`
 			);
 		}
-		story.displayPassage(passage, passageContainer, titleNode, inputNode);
+		story.displayPassage(passage, passageContainer, inputNode);
 	};
 
 	// Find story DOM
@@ -74,9 +73,6 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 		throw new Error(`Missing input container #tw-input`);
 	}
 
-	const titleNode =
-		passageContainer.parentNode?.querySelector<HTMLElement>(".titlebar");
-
 	// Handle link clicks
 	storyContainer.addEventListener("click", (event) => {
 		if (!event.target) {
@@ -93,7 +89,6 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 			navigateToPassageName(
 				passageName,
 				passageContainer,
-				titleNode,
 				inputContainer
 			);
 		}
@@ -116,7 +111,6 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 				navigateToPassageName(
 					passageName,
 					passageContainer,
-					titleNode,
 					inputContainer
 				);
 			}
@@ -129,5 +123,5 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	};
 
 	// Let's go!
-	story.displayCurrentPassage(passageContainer, titleNode, inputContainer);
+	story.displayCurrentPassage(passageContainer, inputContainer);
 })();

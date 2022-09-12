@@ -110,7 +110,6 @@ class Story {
 	displayPassage(
 		passageOrPid: string | Passage,
 		passageNode: HTMLElement,
-		titleNode?: HTMLElement | null,
 		inputNode?: HTMLElement
 	) {
 		let passage: Passage;
@@ -145,10 +144,6 @@ class Story {
 
 		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
 			this.canvasMap.clear();
-		}
-
-		if (titleNode) {
-			titleNode.innerHTML = passage.name;
 		}
 
 		if (inputNode) {
@@ -204,17 +199,8 @@ class Story {
 		}
 	}
 
-	displayCurrentPassage(
-		passageNode: HTMLElement,
-		titleNode?: HTMLElement | null,
-		inputNode?: HTMLElement
-	) {
-		this.displayPassage(
-			this.currentPassage,
-			passageNode,
-			titleNode,
-			inputNode
-		);
+	displayCurrentPassage(passageNode: HTMLElement, inputNode?: HTMLElement) {
+		this.displayPassage(this.currentPassage, passageNode, inputNode);
 	}
 }
 
