@@ -78,13 +78,32 @@ class HandlebarsRenderer {
 			const parentNode = document.createElement("span");
 			const typerId = `typer-${uuid()}`;
 			parentNode.setAttribute("id", typerId);
-			parentNode.classList.add("typer", "typing");
+			parentNode.classList.add("typer");
 			parentNode.innerHTML = text;
 
 			const typer = new NodeTyper(parentNode);
 
+			const quickFinish = (e: KeyboardEvent) => {
+				if (e.code !== "Space") {
+					return;
+				}
+
+				if (!parentNode.classList.contains("typing")) {
+					return;
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				typer.finish();
+				document.removeEventListener("keypress", quickFinish);
+			};
+
+			document.addEventListener("keypress", quickFinish);
+
 			let typeInterval;
 			setTimeout(() => {
+				parentNode.classList.add("typing");
 				typeInterval = setInterval(() => {
 					const res = typer.type();
 					if (!res) {

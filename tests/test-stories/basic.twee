@@ -66,9 +66,9 @@ Age is {{age}}
 {{#type delay=1940}}And this is typed out next!{{/type}}  
 {{#type delay=3520 speed=500}}And this one is real slow{{/type}}
 
-{{#typejs speed=250}} This one is typed by js and is probably broke{{/typejs}}
+{{#typejs speed=40}}This one is typed by js and is probably broke{{/typejs}}
 
-{{#typejs}}But maybe it isn't _that_ bad. Here's a link <a href="http://example.com">to nowhere!</a>{{/typejs}}
+{{#typejs delay=5000}}But maybe it isn't _that_ bad. Here's a link <a href="http://example.com">to nowhere!</a>{{/typejs}}
 
 [[Next]]
 
