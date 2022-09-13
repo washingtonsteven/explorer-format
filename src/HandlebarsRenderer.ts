@@ -88,7 +88,12 @@ class HandlebarsRenderer {
 		});
 	}
 
+	resetHelperState() {
+		this.typeHelpers = [];
+	}
+
 	render(content: string) {
+		this.resetHelperState();
 		const template = Handlebars.compile(content);
 
 		return template(this.story.state.store);
