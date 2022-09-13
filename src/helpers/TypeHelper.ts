@@ -9,8 +9,8 @@ class TypeHelper {
 	text: string;
 	speed: number;
 	delay: number;
-	name: string;
-	wait: boolean = false;
+	name?: string;
+	wait?: boolean = false;
 	parentNode: HTMLElement;
 	typerNodeId: string;
 	typer: NodeTyper;
