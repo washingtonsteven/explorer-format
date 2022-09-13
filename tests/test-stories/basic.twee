@@ -64,7 +64,8 @@ Age is {{age}}
 
 {{#type}}This text should be typed out maybe?{{/type}}  
 {{#type delay=1940}}And this is typed out next!{{/type}}  
-{{#type delay=3520 speed=500}}And this one is real slow{{/type}}
+{{#type delay=3520 speed=500}}And this one is real slow{{/type}}  
+{{#type speed=10}}Fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck{{/type}}
 
 {{#type speed=100 name=1 next=2}}This one is typed by js and is probably broke{{/type}}
 
