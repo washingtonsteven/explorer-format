@@ -54,15 +54,18 @@ class HandlebarsRenderer {
 		Handlebars.registerHelper("type", (options) => {
 			const speed: number = parseInt(options.hash["speed"]) || 40;
 			const delay: number = parseInt(options.hash["delay"]) || 0;
-			const next: string = options.hash["next"];
-			const id: string | number = options.hash["id"];
+			const next: string =
+				options.hash["next"] && String(options.hash["next"]);
+			const name: string =
+				options.hash["name"] && String(options.hash["name"]);
 			const wait: boolean = Boolean(options.hash["wait"]);
 			const text: string = options.fn();
 
 			const onComplete = () => {
-				console.log("onComplete()");
+				if (!next) return;
+
 				const nextTyper = this.typeHelpers.find((t) => {
-					return t.id === next;
+					return t.name === next;
 				});
 
 				if (nextTyper) {
@@ -74,7 +77,7 @@ class HandlebarsRenderer {
 				text,
 				speed,
 				delay,
-				id,
+				name,
 				wait,
 				onComplete
 			);

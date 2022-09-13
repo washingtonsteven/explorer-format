@@ -9,7 +9,7 @@ class TypeHelper {
 	text: string;
 	speed: number;
 	delay: number;
-	id: string | number;
+	name: string;
 	wait: boolean = false;
 	parentNode: HTMLElement;
 	typerNodeId: string;
@@ -24,21 +24,22 @@ class TypeHelper {
 		text: string,
 		speed: number = 40,
 		delay: number = 0,
-		id?: string | number,
+		name?: string,
 		wait?: boolean,
 		onComplete?: Function
 	) {
 		this.text = text;
 		this.speed = speed;
 		this.delay = delay;
-		this.id = id;
+		this.name = name;
 		this.wait = wait;
 		this.onComplete = onComplete;
 
 		this.parentNode = document.createElement("span");
-		this.typerNodeId = `typer-${id && `${id}-`}${uuid()}`;
+		this.typerNodeId = `typer-${name ? `${name}-` : ""}${uuid()}`;
 		this.parentNode.setAttribute("id", this.typerNodeId);
 		this.parentNode.classList.add("typer");
+		this.parentNode.dataset.typerName = String(this.name);
 		this.parentNode.innerHTML = text;
 
 		this.typer = new NodeTyper(this.parentNode);
