@@ -54,26 +54,6 @@ class HandlebarsRenderer {
 		Handlebars.registerHelper("type", (options) => {
 			const speed: number = parseInt(options.hash["speed"]) || 40;
 			const delay: number = parseInt(options.hash["delay"]) || 0;
-			const text: string = options.fn(); // So far, this doesn't support markup in the typed text, even formatting like bold and stuff.
-
-			const textNodes = text.split("").map((char, i) => {
-				const span = document.createElement("span");
-				span.innerHTML = char;
-				span.style.opacity = "0";
-				span.style.animationDuration = "1ms";
-				span.style.animationDelay = `${delay + i * speed}ms`;
-				span.style.animationName = "appear";
-				span.style.animationFillMode = "both";
-
-				return span;
-			});
-
-			return textNodes.map((n) => n.outerHTML).join("");
-		});
-
-		Handlebars.registerHelper("typejs", (options) => {
-			const speed: number = parseInt(options.hash["speed"]) || 40;
-			const delay: number = parseInt(options.hash["delay"]) || 0;
 			const next: string = options.hash["next"];
 			const id: string | number = options.hash["id"];
 			const wait: boolean = Boolean(options.hash["wait"]);
