@@ -110,6 +110,8 @@ class HandlebarsRenderer {
 						clearInterval(typeInterval);
 						(typer.node as Element).classList.remove("typing");
 						(typer.node as Element).classList.add("typed");
+						// Trigger the next one if options.hash["oncomplete"] has a typer id
+						// will have to move around this setTimeout so starting the next one within this will work
 					}
 					const n = document.querySelector(`#${typerId}`);
 					if (n) {
