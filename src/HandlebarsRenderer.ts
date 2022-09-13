@@ -3,10 +3,11 @@ import { HighlightPoint } from "./CanvasMap";
 import type Story from "./Story";
 import { MAP_DISPLAYED_STATEKEY } from "./Story";
 import { unescape, uuid } from "./util";
-import NodeTyper from "./NodeTyper";
+import TypeHelper from "./helpers/TypeHelper";
 
 class HandlebarsRenderer {
 	story: Story;
+	typeHelpers: TypeHelper[] = [];
 
 	constructor(story: Story) {
 		this.story = story;
@@ -73,54 +74,34 @@ class HandlebarsRenderer {
 		Handlebars.registerHelper("typejs", (options) => {
 			const speed: number = parseInt(options.hash["speed"]) || 40;
 			const delay: number = parseInt(options.hash["delay"]) || 0;
+			const next: string = options.hash["next"];
+			const id: string | number = options.hash["id"];
+			const wait: boolean = Boolean(options.hash["wait"]);
 			const text: string = options.fn();
 
-			const parentNode = document.createElement("span");
-			const typerId = `typer-${uuid()}`;
-			parentNode.setAttribute("id", typerId);
-			parentNode.classList.add("typer");
-			parentNode.innerHTML = text;
+			const onComplete = () => {
+				console.log("onComplete()");
+				const nextTyper = this.typeHelpers.find((t) => {
+					return t.id === next;
+				});
 
-			const typer = new NodeTyper(parentNode);
-
-			const quickFinish = (e: KeyboardEvent) => {
-				if (e.code !== "Space") {
-					return;
+				if (nextTyper) {
+					nextTyper.start();
 				}
-
-				if (!parentNode.classList.contains("typing")) {
-					return;
-				}
-
-				e.preventDefault();
-				e.stopPropagation();
-
-				typer.finish();
-				document.removeEventListener("keypress", quickFinish);
 			};
 
-			document.addEventListener("keypress", quickFinish);
+			const typeHelper = new TypeHelper(
+				text,
+				speed,
+				delay,
+				id,
+				wait,
+				onComplete
+			);
 
-			let typeInterval;
-			setTimeout(() => {
-				parentNode.classList.add("typing");
-				typeInterval = setInterval(() => {
-					const res = typer.type();
-					if (!res) {
-						clearInterval(typeInterval);
-						(typer.node as Element).classList.remove("typing");
-						(typer.node as Element).classList.add("typed");
-						// Trigger the next one if options.hash["oncomplete"] has a typer id
-						// will have to move around this setTimeout so starting the next one within this will work
-					}
-					const n = document.querySelector(`#${typerId}`);
-					if (n) {
-						n.outerHTML = (typer.node as Element).outerHTML;
-					}
-				}, speed);
-			}, delay);
+			this.typeHelpers.push(typeHelper);
 
-			return parentNode.outerHTML;
+			return typeHelper.output();
 		});
 	}
 
