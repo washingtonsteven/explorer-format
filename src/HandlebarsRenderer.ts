@@ -2,10 +2,12 @@ import Handlebars from "handlebars";
 import { HighlightPoint } from "./CanvasMap";
 import type Story from "./Story";
 import { MAP_DISPLAYED_STATEKEY } from "./Story";
-import { unescape } from "./util";
+import { unescape, uuid } from "./util";
+import TypeHelper from "./helpers/TypeHelper";
 
 class HandlebarsRenderer {
 	story: Story;
+	typeHelpers: TypeHelper[] = [];
 
 	constructor(story: Story) {
 		this.story = story;
@@ -52,25 +54,46 @@ class HandlebarsRenderer {
 		Handlebars.registerHelper("type", (options) => {
 			const speed: number = parseInt(options.hash["speed"]) || 40;
 			const delay: number = parseInt(options.hash["delay"]) || 0;
-			const text: string = options.fn(); // So far, this doesn't support markup in the typed text, even formatting like bold and stuff.
+			const next: string =
+				options.hash["next"] && String(options.hash["next"]);
+			const name: string =
+				options.hash["name"] && String(options.hash["name"]);
+			const wait: boolean = Boolean(options.hash["wait"]);
+			const text: string = options.fn();
 
-			const textNodes = text.split("").map((char, i) => {
-				const span = document.createElement("span");
-				span.innerHTML = char;
-				span.style.opacity = "0";
-				span.style.animationDuration = "1ms";
-				span.style.animationDelay = `${delay + i * speed}ms`;
-				span.style.animationName = "appear";
-				span.style.animationFillMode = "both";
+			const onComplete = () => {
+				if (!next) return;
 
-				return span;
-			});
+				const nextTyper = this.typeHelpers.find((t) => {
+					return t.name === next;
+				});
 
-			return textNodes.map((n) => n.outerHTML).join("");
+				if (nextTyper) {
+					nextTyper.start();
+				}
+			};
+
+			const typeHelper = new TypeHelper(
+				text,
+				speed,
+				delay,
+				name,
+				wait,
+				onComplete
+			);
+
+			this.typeHelpers.push(typeHelper);
+
+			return typeHelper.output();
 		});
 	}
 
+	resetHelperState() {
+		this.typeHelpers = [];
+	}
+
 	render(content: string) {
+		this.resetHelperState();
 		const template = Handlebars.compile(content);
 
 		return template(this.story.state.store);
