@@ -47,6 +47,13 @@ class Story {
 		this.creator = storyDataNode.getAttribute("creator");
 		this.creatorVersion = storyDataNode.getAttribute("creator-version");
 		this.canvasMap = new CanvasMap();
+		this.renderer = new HandlebarsRenderer(this);
+
+		this.state = new State({
+			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
+			[LAST_PASSAGE_PID_STATEKEY]: null,
+			[MAP_DISPLAYED_STATEKEY]: false,
+		});
 
 		const passages: Passage[] = [];
 		const passageNodes =
@@ -72,18 +79,16 @@ class Story {
 				});
 			}
 
+			if (passage.name === "StorySetup") {
+				// run macros in the setup passage
+				// use rawContent since we aren't worrying about links or anything
+				this.renderer.render(passage.rawContent);
+			}
+
 			passages.push(passage);
 		});
 
 		this.passages = passages;
-
-		this.state = new State({
-			[CURRENT_PASSAGE_PID_STATEKEY]: startnode,
-			[LAST_PASSAGE_PID_STATEKEY]: null,
-			[MAP_DISPLAYED_STATEKEY]: false,
-		});
-
-		this.renderer = new HandlebarsRenderer(this);
 	}
 
 	get currentPassage() {

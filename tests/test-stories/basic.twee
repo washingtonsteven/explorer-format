@@ -46,6 +46,11 @@ xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx
 
+:: StorySetup
+
+{{#audio name="song" url="https://opengameart.org/sites/default/files/song18_0.mp3"}}{{/audio}}
+{{#audio name="song2" url="https://opengameart.org/sites/default/files/TownTheme.mp3"}}{{/audio}}
+
 :: StoryTitle
 
 Basic Test Story
@@ -77,12 +82,25 @@ Age is {{age}}
 
 :: Next
 
+{{#playaudio name="song" loop=true}}{{/playaudio}}
+
 This is the second part.
 
 {{#script}}
 console.log(this);
 this.set("age", "set from the second passage");
 console.log(this.get("currentPassagePid"));
+document.addEventListener("keypress", (e) => {
+	if (e.key !== "t") return;
+	const audio = window.__explorer.story.renderer.audioHelper.audioWrappers.song2.audio;
+	if (audio) {
+		if (!audio.paused) {
+			audio.pause();
+		} else {
+			audio.play();
+		}
+	}
+});
 {{/script}}
 
 [[Start]]  
