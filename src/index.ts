@@ -117,6 +117,13 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 		});
 	}
 
+	document.addEventListener("keypress", (e) => {
+		if (e.key === "m") {
+			// mute audio
+			story.renderer.audioHelper.toggleMuteAll();
+		}
+	});
+
 	// Let's make the story accessible
 	(window as WindowWithExplorerGlobal).__explorer = {
 		story,
