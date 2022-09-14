@@ -92,7 +92,7 @@ this.set("age", "set from the second passage");
 console.log(this.get("currentPassagePid"));
 document.addEventListener("keypress", (e) => {
 	if (e.key !== "t") return;
-	const audio = window.__explorer.story.renderer.audioHelper.audioWrappers.song2.audio;
+	const audio = window.__explorer.story.renderer.audioHelper.getAudioByName("song2");
 	if (audio) {
 		if (!audio.paused) {
 			audio.pause();
