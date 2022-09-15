@@ -9,6 +9,8 @@ $max_width: 1080px;
 	--accent1bright: #ffa900;
 	--accent1dim: #c8a937;
 	--disabled: #ccc;
+	--accent1fade: rgba(255, 215, 0, 0.4);
+	--textShadowDepth: 1px;
 }
 
 body,
@@ -21,7 +23,8 @@ body {
 	background-color: var(--background);
 	color: var(--text);
 	font-family: monospace;
-	text-shadow: 0 0 1px currentColor;
+	font-size: 16px;
+	text-shadow: 0 0 var(--textShadowDepth) currentColor;
 }
 
 a {
@@ -55,7 +58,7 @@ a {
 .window {
 	padding-top: 0;
 	border: solid 1px var(--accent1);
-	box-shadow: 0 0 3px var(--accent1), 0 0 3px inset var(--accent1);
+	box-shadow: 0 0 10px var(--accent1fade), 0 0 10px inset var(--accent1fade);
 
 	&#tw-story {
 		grid-column: 1 / span 8;
@@ -78,7 +81,7 @@ a {
 		color: var(--textDark);
 		display: flex;
 		justify-content: space-between;
-		box-shadow: 0 1px 3px var(--accent1);
+		box-shadow: 0 2px 11px var(--accent1fade);
 
 		&::after {
 			content: "x";
@@ -94,7 +97,7 @@ a {
 			width: 50%;
 			border-color: var(--accent1);
 			transform: scaleX(1.25);
-			box-shadow: 0 0 2px var(--accent1);
+			box-shadow: 0 0 7px var(--accent1fade);
 		}
 
 		&#tw-passage {
@@ -137,8 +140,9 @@ a {
 		padding: 0.5em 1.5em;
 		border-radius: 0.75em;
 		font-family: monospace;
-		box-shadow: 0 0 2px var(--accent1), 0 0 2px inset var(--accent1);
-		text-shadow: 0 0 1px currentColor;
+		font-size: 1rem;
+		box-shadow: 0 0 5px var(--accent1fade), 0 0 5px inset var(--accent1fade);
+		text-shadow: 0 0 var(--textShadowDepth) currentColor;
 
 		&:hover:not(:disabled) {
 			background-color: var(--accent1);
