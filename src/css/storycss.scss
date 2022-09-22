@@ -1,0 +1,19 @@
+#interface {
+	&:before,
+	&:after {
+		opacity: 0;
+	}
+	&.anim {
+		&:before,
+		&:after {
+			animation: reveal 1000ms 1500ms both ease-in-out;
+			transform-origin: left;
+			opacity: 1;
+		}
+
+		&:after {
+			animation-delay: calc(1500ms + 750ms);
+			transform-origin: right;
+		}
+	}
+}

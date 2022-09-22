@@ -7,6 +7,8 @@ const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid";
 const LAST_PASSAGE_PID_STATEKEY = "lastPassagePid";
 export const MAP_DISPLAYED_STATEKEY = "mapDisplayed";
 
+export const STORY_LOADED_EVENT = "explorer:storyloaded";
+
 class Story {
 	name: string;
 	ifid: string;
@@ -89,13 +91,15 @@ class Story {
 		});
 
 		this.passages = passages;
+
+		document.dispatchEvent(new CustomEvent(STORY_LOADED_EVENT));
 	}
 
 	get currentPassage() {
 		const currentPassage = this.getPassageByPid(
 			this.state.get(CURRENT_PASSAGE_PID_STATEKEY)
 		);
-		if (!currentPassage) {
+		if (!currentPassage && this.passages) {
 			throw new Error(
 				`Tried to fetch currentPassage but it doesn't exist!`
 			);
@@ -105,17 +109,20 @@ class Story {
 	}
 
 	getPassageByPid(pid: string) {
+		if (!this.passages) return null;
 		return this.passages.find((passage) => passage.pid === pid) || null;
 	}
 
 	getPassageByName(name: string) {
+		if (!this.passages) return null;
 		return this.passages.find((passage) => passage.name === name) || null;
 	}
 
 	displayPassage(
 		passageOrPid: string | Passage,
 		passageNode: HTMLElement,
-		inputNode?: HTMLElement
+		buttonContainer?: HTMLElement | null,
+		directionalsContainer?: HTMLElement | null
 	) {
 		let passage: Passage;
 		if (typeof passageOrPid === "string") {
@@ -151,61 +158,66 @@ class Story {
 			this.canvasMap.clear();
 		}
 
-		if (inputNode) {
-			const buttonContainer = inputNode.querySelector(".buttons");
-			const directionalContainer =
-				inputNode.querySelector(".directionals");
-			if (buttonContainer) {
-				buttonContainer.innerHTML = "";
+		if (buttonContainer) {
+			buttonContainer.innerHTML = "";
 
-				const linkList = [...passage.links];
+			const linkList = [...passage.links];
 
-				if (!linkList.length) {
-					// hack to make sure the button container isn't less than one button tall
-					linkList.push({ alias: "empty", passageName: "empty" });
-				}
+			if (!linkList.length) {
+				buttonContainer.classList.add("empty");
+			} else {
+				buttonContainer.classList.remove("empty");
+			}
 
-				linkList.forEach((link) => {
-					const button = document.createElement("button");
-					button.innerHTML = link.alias;
-					button.dataset.passageName = link.passageName;
-					buttonContainer.appendChild(button);
-				});
+			linkList.forEach((link) => {
+				const button = document.createElement("button");
+				button.innerHTML = link.alias;
+				button.dataset.passageName = link.passageName;
+				buttonContainer.appendChild(button);
+			});
+		}
 
-				if (directionalContainer) {
-					const directionalButtons = [
-						...directionalContainer.querySelectorAll("button"),
-					];
-					directionalButtons.forEach((button) => {
-						button.disabled = true;
-						button.dataset.passageName = "";
+		if (directionalsContainer) {
+			const directionalButtons = [
+				...directionalsContainer.querySelectorAll("button"),
+			];
+			directionalButtons.forEach((button) => {
+				button.disabled = true;
+				button.dataset.passageName = "";
+			});
+
+			if (passage.directionalLinks) {
+				passage.directionalLinks.forEach((link) => {
+					const button = directionalButtons.find((b) => {
+						return b.classList.contains(link.alias.toLowerCase());
 					});
 
-					if (passage.directionalLinks) {
-						passage.directionalLinks.forEach((link) => {
-							const button = directionalButtons.find((b) => {
-								return b.classList.contains(
-									link.alias.toLowerCase()
-								);
-							});
-
-							if (button) {
-								button.disabled = false;
-								button.dataset.passageName = link.passageName;
-							} else {
-								console.warn(
-									`Tried to set up a directional called ${link.alias.toLowerCase()}, but that button wasn't found.`
-								);
-							}
-						});
+					if (button) {
+						button.disabled = false;
+						button.dataset.passageName = link.passageName;
+					} else {
+						console.warn(
+							`Tried to set up a directional called ${link.alias.toLowerCase()}, but that button wasn't found.`
+						);
 					}
-				}
+				});
 			}
 		}
 	}
 
-	displayCurrentPassage(passageNode: HTMLElement, inputNode?: HTMLElement) {
-		this.displayPassage(this.currentPassage, passageNode, inputNode);
+	displayCurrentPassage(
+		passageNode: HTMLElement,
+		buttonContainer?: HTMLElement | null,
+		directionalsContainer?: HTMLElement | null
+	) {
+		if (!this.currentPassage) return;
+
+		this.displayPassage(
+			this.currentPassage,
+			passageNode,
+			buttonContainer,
+			directionalsContainer
+		);
 	}
 }
 

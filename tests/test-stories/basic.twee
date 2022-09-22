@@ -8,6 +8,7 @@
 :: CSS [stylesheet]
 
 .some-class { color: dodgerblue }
+#interface:before,#interface:after{opacity:0}#interface.anim:before,#interface.anim:after{-webkit-transform-origin:0;transform-origin:0;opacity:1;-webkit-animation:reveal 1s ease-in-out 1.5s both;animation:reveal 1s ease-in-out 1.5s both}#interface.anim:after{-webkit-transform-origin:100%;transform-origin:100%;-webkit-animation-delay:2.25s;animation-delay:2.25s}
 
 :: JS [script]
 
@@ -50,6 +51,11 @@ xxxxxxxxxxxxxxxxxxxx
 
 {{#audio name="song" url="https://opengameart.org/sites/default/files/song18_0.mp3"}}{{/audio}}
 {{#audio name="song2" url="https://opengameart.org/sites/default/files/TownTheme.mp3"}}{{/audio}}
+{{#script}}
+document.addEventListener("explorer:storyready", (e) => {
+	document.querySelector("#interface").classList.add("anim");
+})
+{{/script}}
 
 :: StoryTitle
 

@@ -41,6 +41,17 @@
 			"engines": {
 				"browsers": "> 0.25%"
 			}
+		},
+		"storyscss": {
+			"source": "src/css/storycss.scss",
+			"distDir": "build",
+			"sourceMap": {
+				"inline": true,
+				"inlineSources": true
+			},
+			"engines": {
+				"browsers": "> 0.25%"
+			}
 		}
 	},
 	"dependencies": {
@@ -53,7 +64,7 @@
 		"buffer": false
 	},
 	"nodemonConfig": {
-		"ext": "scss,ts,twee",
+		"ext": "scss,ts,twee,hbs",
 		"verbose": true,
 		"ignore": [
 			"**/build/**",

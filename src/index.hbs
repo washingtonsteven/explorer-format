@@ -11,27 +11,20 @@
 		\{{STORY_DATA}}
 		<div id="interface">
 			<div id="tw-story" class="window">
-				<div class="titlebar">HyperTear MR</div>
 				<div id="tw-passage" class="content"></div>
 			</div>
-			<div class="window" id="tw-input">
-				<div class="titlebar">Nav</div>
-				<div class="content">
-					<div class="buttons"></div>
-					<hr />
-					<div class="directionals">
-						<button class="north" disabled>↑</button>
-						<button class="west" disabled>←</button>
-						<button class="east" disabled>→</button>
-						<button class="south" disabled>↓</button>
-					</div>
-					<hr />
-					<div class="map">
-						<canvas id="map"></canvas>
-					</div>
-				</div>
+			<div id="buttons" class="float-ui"></div>
+			<div id="directionals" class="float-ui">
+				<button class="north" disabled>↑</button>
+				<button class="west" disabled>←</button>
+				<button class="east" disabled>→</button>
+				<button class="south" disabled>↓</button>
+			</div>
+			<div id="map-container" class="float-ui">
+				<canvas id="map"></canvas>
 			</div>
 		</div>
+		<div id="loading-cover"></div>
 		<script type="text/javascript">
 			{{{format_js}}}
 		</script>

@@ -92,6 +92,10 @@ class CanvasMap {
 			height: this.canvas.getHeight(),
 		};
 
+		// Need this since fabric doesn't like the map not being in the page flow
+		// Once its instantiated we can do anything
+		document.querySelector("#map-container")?.classList.add("active");
+
 		this.canvas.on("mouse:wheel", (opt) => {
 			const delta = opt.e.deltaY;
 			let zoom = this.canvas.getZoom();
