@@ -21,4 +21,10 @@ This will:
 3. Inject that HTML into the `source` attribute in the format JSON and finally,
 4. Write out that JSON (wrapped in a `window.storyFormat` JSON-P style call) to `dist/format.js`
 
+## Format dev
 
+```shell
+yarn serve
+```
+
+Will start a dev server at `http://localhost:3000` hosting `tests/test-stories/basic.twee`, for testing. Will automatically rebuild when any ts, scss, or hbs file is changed. Will not autoreload your browser, sorry, but I can't do everything for you.
