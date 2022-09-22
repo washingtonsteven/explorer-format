@@ -43,7 +43,7 @@
 			}
 		},
 		"storyscss": {
-			"source": "src/css/storycss.scss",
+			"source": "tests/test-stories/storycss.scss",
 			"distDir": "build",
 			"sourceMap": {
 				"inline": true,
