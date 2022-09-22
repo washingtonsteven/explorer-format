@@ -82,7 +82,7 @@ Age is {{age}}
 
 :: Next
 
-{{#playaudio name="song" loop=true}}{{/playaudio}}
+{{!-- {{#playaudio name="song" loop=true}}{{/playaudio}} --}}
 
 This is the second part.
 
