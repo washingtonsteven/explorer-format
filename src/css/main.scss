@@ -1,17 +1,18 @@
 :root {
+	// accent colors
+	--accent_main: #a7078c;
+	--accent_dim: #33032b;
+	--accent_main_fade: rgba(167, 7, 140, 0.4);
+
 	--background: #111;
 	--backgroundDest: #2d0226;
 	--bg_gradient: linear-gradient(
 		to bottom,
 		var(--background) 80%,
-		var(--backgroundDest) 100%
+		var(--accent_dim) 100%
 	);
 	--text: #ddd;
 	--disabled: #aaa;
-
-	// accent colors
-	--accent_main: #a7078c;
-	--accent_main_fade: rgba(167, 7, 140, 0.4);
 
 	// fonts
 	--font: sans-serif;

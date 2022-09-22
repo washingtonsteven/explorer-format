@@ -8,7 +8,7 @@
 :: CSS [stylesheet]
 
 .some-class { color: dodgerblue }
-#interface:before,#interface:after{opacity:0}#interface.anim:before,#interface.anim:after{-webkit-transform-origin:0;transform-origin:0;opacity:1;-webkit-animation:reveal 1s ease-in-out 1.5s both;animation:reveal 1s ease-in-out 1.5s both}#interface.anim:after{-webkit-transform-origin:100%;transform-origin:100%;-webkit-animation-delay:2.25s;animation-delay:2.25s}
+:root{--accent_main:#078bd8;--accent_dim:#054266;--accent_fade:#078bd866}#interface:before,#interface:after{opacity:0}#interface.anim:before,#interface.anim:after{transform-origin:0;opacity:1;animation:reveal 1s ease-in-out 1.5s both}#interface.anim:after{transform-origin:100%;animation-delay:2.25s}
 
 :: JS [script]
 
