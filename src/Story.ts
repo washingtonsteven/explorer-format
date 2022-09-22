@@ -7,7 +7,7 @@ const CURRENT_PASSAGE_PID_STATEKEY = "currentPassagePid";
 const LAST_PASSAGE_PID_STATEKEY = "lastPassagePid";
 export const MAP_DISPLAYED_STATEKEY = "mapDisplayed";
 
-export const STORY_LOADED_EVENT = "explorer:storyloaded";
+export const PASSAGE_CHANGED_EVENT = "explorer:passagechanged";
 
 class Story {
 	name: string;
@@ -91,8 +91,6 @@ class Story {
 		});
 
 		this.passages = passages;
-
-		document.dispatchEvent(new CustomEvent(STORY_LOADED_EVENT));
 	}
 
 	get currentPassage() {
@@ -203,6 +201,14 @@ class Story {
 				});
 			}
 		}
+
+		document.dispatchEvent(
+			new CustomEvent(PASSAGE_CHANGED_EVENT, {
+				detail: {
+					passage,
+				},
+			})
+		);
 	}
 
 	displayCurrentPassage(

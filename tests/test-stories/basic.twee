@@ -12,7 +12,11 @@
 
 :: JS [script]
 
-(() => console.log("loaded!"))();
+(() => {
+	document.addEventListener("explorer:passagechanged", (event) => {
+		console.log("new passage", event.detail.passage.name);
+	});
+})()
 
 :: MapDefaults
 {
