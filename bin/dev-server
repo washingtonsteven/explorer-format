@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+const handler = require("serve-handler");
+const http = require("http");
+const path = require("path");
+const { execSync } = require("child_process");
+
+const ROOT_DIR = path.resolve(__dirname, "..");
+const serveDir = path.resolve(ROOT_DIR, "tests/test-stories/output");
+
+// Build format and twee
+execSync("yarn build-basic", { stdio: "inherit" });
+
+const server = http.createServer((request, response) => {
+	return handler(request, response, { public: serveDir });
+});
+
+server.listen(process.env.PORT || 3000, () => {
+	console.log("Running on http://localhost:3000");
+});

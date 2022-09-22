@@ -67,7 +67,7 @@ Age is {{age}}
 
 <a href="http://google.com">google</a>
 
-{{#type}}This text should be typed out maybe?{{/type}}  
+{{#type}}This text should be typed out maybe, yeah?{{/type}}  
 {{#type delay=1940}}And this is typed out next!{{/type}}  
 {{#type delay=3520 speed=500}}And this one is real slow{{/type}}  
 {{#type speed=10}}Fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck fast as heck{{/type}}
