@@ -19,28 +19,18 @@
 		"nodemon": "^2.0.20",
 		"parcel": "^2.7.0"
 	},
+	"source": [
+		"src/index.ts",
+		"src/css/main.scss",
+		"tests/test-stories/storycss.scss"
+	],
 	"targets": {
 		"default": {
-			"source": "src/index.ts",
 			"distDir": "build",
 			"sourceMap": {
-				"inline": true,
-				"inlineSources": true
+				"inline": true
 			},
-			"engines": {
-				"browsers": "> 0.25%"
-			}
-		},
-		"scss": {
-			"source": "src/css/main.scss",
-			"distDir": "build",
-			"sourceMap": {
-				"inline": true,
-				"inlineSources": true
-			},
-			"engines": {
-				"browsers": "> 0.25%"
-			}
+			"context": "browser"
 		}
 	},
 	"dependencies": {
@@ -53,7 +43,7 @@
 		"buffer": false
 	},
 	"nodemonConfig": {
-		"ext": "scss,ts,twee",
+		"ext": "scss,ts,twee,hbs",
 		"verbose": true,
 		"ignore": [
 			"**/build/**",

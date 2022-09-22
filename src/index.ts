@@ -8,6 +8,8 @@ interface ExplorerGlobal {
 
 type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 
+const STORY_READY_EVENT = "explorer:storyready";
+
 (() => {
 	// Initialize story data
 	const rootStoryDataNode =
@@ -44,7 +46,8 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	const navigateToPassageName = (
 		passageName: string,
 		passageContainer: HTMLElement,
-		inputNode?: HTMLElement
+		buttonContainer?: HTMLElement | null,
+		directionalsContainer?: HTMLElement | null
 	) => {
 		const passage = story.getPassageByName(passageName);
 		if (!passage) {
@@ -52,7 +55,12 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 				`Couldn't find passage with name: "${passageName}"!`
 			);
 		}
-		story.displayPassage(passage, passageContainer, inputNode);
+		story.displayPassage(
+			passage,
+			passageContainer,
+			buttonContainer,
+			directionalsContainer
+		);
 	};
 
 	// Find story DOM
@@ -68,9 +76,38 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 		throw new Error(`Missing passage container #tw-passage`);
 	}
 
-	const inputContainer = document.querySelector<HTMLElement>("#tw-input");
-	if (!inputContainer) {
-		throw new Error(`Missing input container #tw-input`);
+	const buttonContainer = document.querySelector<HTMLElement>("#buttons");
+
+	const directionalsContainer =
+		document.querySelector<HTMLElement>("#directionals");
+
+	const handleButtonLink = (event: Event) => {
+		if (!event.target) {
+			return;
+		}
+
+		const target = event.target as HTMLElement;
+
+		if (
+			target.tagName.toLowerCase() === "button" &&
+			target.dataset.passageName
+		) {
+			const passageName = target.dataset.passageName;
+			navigateToPassageName(
+				passageName,
+				passageContainer,
+				buttonContainer,
+				directionalsContainer
+			);
+		}
+	};
+
+	if (buttonContainer) {
+		buttonContainer.addEventListener("click", handleButtonLink);
+	}
+
+	if (directionalsContainer) {
+		directionalsContainer.addEventListener("click", handleButtonLink);
 	}
 
 	// Handle link clicks
@@ -89,33 +126,11 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 			navigateToPassageName(
 				passageName,
 				passageContainer,
-				inputContainer
+				buttonContainer,
+				directionalsContainer
 			);
 		}
 	});
-
-	if (inputContainer) {
-		// Handle input button clicks
-		inputContainer.addEventListener("click", (event) => {
-			if (!event.target) {
-				return;
-			}
-
-			const target = event.target as HTMLElement;
-
-			if (
-				target.tagName.toLowerCase() === "button" &&
-				target.dataset.passageName
-			) {
-				const passageName = target.dataset.passageName;
-				navigateToPassageName(
-					passageName,
-					passageContainer,
-					inputContainer
-				);
-			}
-		});
-	}
 
 	document.addEventListener("keypress", (e) => {
 		if (e.key === "m") {
@@ -130,5 +145,17 @@ type WindowWithExplorerGlobal = typeof window & ExplorerGlobal;
 	};
 
 	// Let's go!
-	story.displayCurrentPassage(passageContainer, inputContainer);
+	story.displayCurrentPassage(
+		passageContainer,
+		buttonContainer,
+		directionalsContainer
+	);
+
+	const loadingCover = document.querySelector("#loading-cover");
+	if (loadingCover) {
+		setTimeout(() => {
+			loadingCover.classList.add("loaded");
+			document.dispatchEvent(new CustomEvent(STORY_READY_EVENT));
+		}, 2500);
+	}
 })();

@@ -8,10 +8,15 @@
 :: CSS [stylesheet]
 
 .some-class { color: dodgerblue }
+:root{--accent_main:#078bd8;--accent_dim:#054266;--accent_fade:#078bd866}#interface:before,#interface:after{opacity:0}#interface.anim:before,#interface.anim:after{transform-origin:0;opacity:1;animation:reveal 1s ease-in-out 1.5s both}#interface.anim:after{transform-origin:100%;animation-delay:2.25s}
 
 :: JS [script]
 
-(() => console.log("loaded!"))();
+(() => {
+	document.addEventListener("explorer:passagechanged", (event) => {
+		console.log("new passage", event.detail.passage.name);
+	});
+})()
 
 :: MapDefaults
 {
@@ -50,6 +55,11 @@ xxxxxxxxxxxxxxxxxxxx
 
 {{#audio name="song" url="https://opengameart.org/sites/default/files/song18_0.mp3"}}{{/audio}}
 {{#audio name="song2" url="https://opengameart.org/sites/default/files/TownTheme.mp3"}}{{/audio}}
+{{#script}}
+document.addEventListener("explorer:storyready", (e) => {
+	document.querySelector("#interface").classList.add("anim");
+})
+{{/script}}
 
 :: StoryTitle
 
