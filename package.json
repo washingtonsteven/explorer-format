@@ -15,7 +15,6 @@
 	"devDependencies": {
 		"@parcel/transformer-sass": "2.7.0",
 		"@types/fabric": "^4.5.12",
-		"extwee": "^2.0.6",
 		"nodemon": "^2.0.20",
 		"parcel": "^2.7.0"
 	},
@@ -34,6 +33,7 @@
 		}
 	},
 	"dependencies": {
+		"extwee": "^2.0.6",
 		"fabric": "^5.2.4",
 		"handlebars": "^4.7.7",
 		"marked": "^4.1.0",

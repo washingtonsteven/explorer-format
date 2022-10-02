@@ -144,12 +144,21 @@ class Story {
 		this.state.set(CURRENT_PASSAGE_PID_STATEKEY, passage.pid);
 
 		const passageContent = this.renderer.render(passage.richContent);
+		const passageContainer = document.createElement("div");
+		passageContainer.classList.add("passage-container");
+		passageContainer.innerHTML = passageContent;
 
-		passageNode.classList.remove("run-anim");
-		passageNode.innerHTML = "";
+		// passageNode.classList.remove("run-anim");
+		// passageNode.innerHTML = "";
 		setTimeout(() => {
-			passageNode.classList.add("run-anim");
-			passageNode.innerHTML = passageContent;
+			// passageNode.classList.add("run-anim");
+			// passageNode.innerHTML = passageContent;
+			passageNode.appendChild(passageContainer);
+			passageContainer.scrollIntoView({
+				block: "start",
+				inline: "nearest",
+				behavior: "smooth",
+			});
 		}, 1);
 
 		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
