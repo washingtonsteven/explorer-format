@@ -10,7 +10,7 @@ const storyJSON = {
 	name: "Explorer",
 	version: "1.0.0",
 	author: "Steve Washington",
-	image: "",
+	image: "icon.png",
 	url: "",
 	license: "MIT",
 	proofing: false,
