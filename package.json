@@ -1,6 +1,7 @@
 {
 	"name": "explorer-format",
-	"version": "1.0.0",
+	"version": "1.0.1",
+	"description": "explorer is a Twine story format. it has a built-in map. otherwise it's not terribly special, and probably broken. you are probably looking for Sugarcube or Harlowe",
 	"license": "MIT",
 	"engines": {
 		"node": ">=16"
