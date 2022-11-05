@@ -4,7 +4,7 @@ I wanted to make a Twine story format for the idea of a story/game I had so here
 
 ## Quick Start
 
-Option 1 (Twine): View the [raw format.js file](https://raw.githubusercontent.com/washingtonsteven/explorer-format/main/dist/format.js), and copy the URL into `Twine > Story Format > Add`
+Option 1 (Twine): View the [raw format.js file](https://raw.githubusercontent.com/washingtonsteven/the-website/main/things/explorer-format/format.js), and copy the URL into `Twine > Story Format > Add`
 
 Option 2 (CLI compilers like tweego): Download `format.js` from `dist` and place them in a proper directory (i.e. `storyformats` for [tweego](https://www.motoslave.net/tweego/docs/#getting-started-story-formats-search-directories)).
 

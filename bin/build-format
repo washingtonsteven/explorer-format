@@ -11,7 +11,7 @@ const storyJSON = {
 	name: "Explorer",
 	version,
 	description,
-	author: "Steve Washington",
+	author: "stv ⭐",
 	image: "icon.png",
 	url: "",
 	license: "MIT",
