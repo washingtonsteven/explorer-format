@@ -145,7 +145,10 @@ class Story {
 
 		const passageContent = this.renderer.render(passage.richContent);
 		const passageContainer = document.createElement("div");
-		passageContainer.classList.add("passage-container");
+		passageContainer.classList.add(
+			"passage-container",
+			...(passage.tags || [])
+		);
 		passageContainer.innerHTML = passageContent;
 
 		// passageNode.classList.remove("run-anim");
@@ -159,6 +162,14 @@ class Story {
 				inline: "nearest",
 				behavior: "smooth",
 			});
+
+			const activePassageContainer = passageNode.querySelector(
+				".passage-container.active"
+			);
+			if (activePassageContainer) {
+				activePassageContainer.classList.remove("active");
+			}
+			passageContainer.classList.add("active");
 		}, 1);
 
 		if (!this.state.get(MAP_DISPLAYED_STATEKEY)) {
