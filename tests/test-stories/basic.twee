@@ -2,7 +2,8 @@
 {
 	"ifid": "1BDC6F8E-F319-4776-AA66-1BE57A4A619C",
 	"format": "Explorer",
-	"format-version": "1.0.0"
+	"format-version": "1.0.2",
+	"start": "Start"
 }
 
 :: CSS [stylesheet]
