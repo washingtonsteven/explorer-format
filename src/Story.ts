@@ -147,7 +147,7 @@ class Story {
 		const passageContainer = document.createElement("div");
 		passageContainer.classList.add(
 			"passage-container",
-			...(passage.tags || [])
+			...(passage.tags.filter(Boolean) || [])
 		);
 		passageContainer.innerHTML = passageContent;
 
