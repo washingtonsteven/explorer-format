@@ -27,9 +27,7 @@
 	"targets": {
 		"default": {
 			"distDir": "build",
-			"sourceMap": {
-				"inline": true
-			},
+			"sourceMap": false,
 			"context": "browser"
 		}
 	},
